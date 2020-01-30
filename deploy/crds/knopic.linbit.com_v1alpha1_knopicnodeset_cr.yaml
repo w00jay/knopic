@@ -1,0 +1,7 @@
+apiVersion: knopic.linbit.com/v1alpha1
+kind: KnopicNodeSet
+metadata:
+  name: example-knopicnodeset
+spec:
+  # Add fields here
+  size: 3

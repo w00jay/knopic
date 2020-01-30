@@ -1,0 +1,31 @@
+---
+apiVersion: knopic.linbit.com/v1alpha1
+kind: KnopicControllerSet
+metadata:
+  name: hello-knopic
+---
+apiVersion: knopic.linbit.com/v1alpha1
+kind: KnopicNodeSet
+metadata:
+  name: hello-knopic
+spec:
+  # etcdURL url for controller persistence.
+  etcdURL: "etcd-knopic:2379"
+
+  # StoragePools for the NodeSet to manage.
+  storagePools:
+    lvmPools:
+    - name: "lvm-thick"
+
+      # knopicpool must be an already existing lvm
+      # volume group on the kubelet each Knopic
+      # node is scheduled on.
+      volumeGroup: "knopicpool"
+    lvmThinPools:
+    - name: "lvm-thin"
+      volumeGroup: "knopicpool"
+
+      # knopicthinpool must be an already existing
+      # lvm thin volume backed knopicpool on the
+      # kubelet each Knopic node is scheduled on.
+      thinVolume: "knopicthinpool"

@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package piraeuscontrollerset
+package knopiccontrollerset
 
 import (
 	"context"
@@ -27,10 +27,10 @@ import (
 	lapiconst "github.com/LINBIT/golinstor"
 	lapi "github.com/LINBIT/golinstor/client"
 
-	piraeusv1alpha1 "github.com/piraeusdatastore/piraeus-operator/pkg/apis/piraeus/v1alpha1"
-	mdutil "github.com/piraeusdatastore/piraeus-operator/pkg/k8s/metadata/util"
-	kubeSpec "github.com/piraeusdatastore/piraeus-operator/pkg/k8s/spec"
-	lc "github.com/piraeusdatastore/piraeus-operator/pkg/linstor/client"
+	knopicv1alpha1 "github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
+	mdutil "github.com/knopic/knopic-operator/pkg/k8s/metadata/util"
+	kubeSpec "github.com/knopic/knopic-operator/pkg/k8s/spec"
+	lc "github.com/knopic/knopic-operator/pkg/linstor/client"
 
 	"github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
@@ -52,7 +52,7 @@ import (
 
 const linstorControllerFinalizer = "finalizer.linstor-controller.linbit.com"
 
-// var log = logf.Log.WithName("controller_piraeuscontrollerset")
+// var log = logf.Log.WithName("controller_knopiccontrollerset")
 
 func init() {
 	logrus.SetFormatter(&logrus.TextFormatter{})
@@ -61,10 +61,10 @@ func init() {
 }
 
 // var log = logrus.WithFields(logrus.Fields{
-// 	"controller": "PiraeusControllerSet",
+// 	"controller": "KnopicControllerSet",
 // })
 
-// Add creates a new PiraeusControllerSet Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new KnopicControllerSet Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -72,26 +72,26 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcilePiraeusControllerSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileKnopicControllerSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
-	c, err := controller.New("piraeuscontrollerset-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("knopiccontrollerset-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource PiraeusControllerSet
-	err = c.Watch(&source.Kind{Type: &piraeusv1alpha1.PiraeusControllerSet{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource KnopicControllerSet
+	err = c.Watch(&source.Kind{Type: &knopicv1alpha1.KnopicControllerSet{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
 	err = c.Watch(&source.Kind{Type: &appsv1.StatefulSet{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &piraeusv1alpha1.PiraeusControllerSet{},
+		OwnerType:    &knopicv1alpha1.KnopicControllerSet{},
 	})
 	if err != nil {
 		return err
@@ -100,11 +100,11 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// blank assignment to verify that ReconcilePiraeusControllerSet implements reconcile.Reconciler
-var _ reconcile.Reconciler = &ReconcilePiraeusControllerSet{}
+// blank assignment to verify that ReconcileKnopicControllerSet implements reconcile.Reconciler
+var _ reconcile.Reconciler = &ReconcileKnopicControllerSet{}
 
-// ReconcilePiraeusControllerSet reconciles a PiraeusControllerSet object
-type ReconcilePiraeusControllerSet struct {
+// ReconcileKnopicControllerSet reconciles a KnopicControllerSet object
+type ReconcileKnopicControllerSet struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client        client.Client
@@ -124,8 +124,8 @@ func newCompoundErrorMsg(errs []error) []string {
 	return errStrs
 }
 
-// Reconcile reads that state of the cluster for a PiraeusControllerSet object and makes changes based
-// on the state read and what is in the PiraeusControllerSet.Spec
+// Reconcile reads that state of the cluster for a KnopicControllerSet object and makes changes based
+// on the state read and what is in the KnopicControllerSet.Spec
 // TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
 // a Pod as an example
 // Note:
@@ -134,7 +134,7 @@ func newCompoundErrorMsg(errs []error) []string {
 // This function is a mini-main function and has a lot of boilerplate code that doesn't make a lot of
 // sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
 	reqLogger := logrus.WithFields(logrus.Fields{
 		"resquestName":      request.Name,
@@ -143,8 +143,8 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 
 	reqLogger.Info("CS Reconcile: Entering")
 
-	// Fetch the PiraeusControllerSet instance
-	pcs := &piraeusv1alpha1.PiraeusControllerSet{}
+	// Fetch the KnopicControllerSet instance
+	pcs := &knopicv1alpha1.KnopicControllerSet{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, pcs)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -163,16 +163,16 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 		"name":              pcs.Name,
 		"namespace":         pcs.Namespace,
 	})
-	log.Info("reconciling PiraeusControllerSet")
+	log.Info("reconciling KnopicControllerSet")
 
 	logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
 		"spec":      fmt.Sprintf("%+v", pcs.Spec),
-	}).Debug("found PiraeusControllerSet")
+	}).Debug("found KnopicControllerSet")
 
 	if pcs.Status.SatelliteStatuses == nil {
-		pcs.Status.SatelliteStatuses = make(map[string]*piraeusv1alpha1.SatelliteStatus)
+		pcs.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
 	}
 
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pcs)
@@ -194,7 +194,7 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 
 	// Define a service for the controller.
 	ctrlService := newServiceForPCS(pcs)
-	// Set PiraeusControllerSet instance as the owner and controller
+	// Set KnopicControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, ctrlService, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -221,7 +221,7 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 
 	// Define a configmap for the controller.
 	configMap := newConfigMapForPCS(pcs)
-	// Set PiraeusControllerSet instance as the owner and controller
+	// Set KnopicControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, configMap, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -249,7 +249,7 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 	// Define a new StatefulSet object
 	ctrlSet := newStatefulSetForPCS(pcs)
 
-	// Set PiraeusControllerSet instance as the owner and controller
+	// Set KnopicControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, ctrlSet, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -282,7 +282,7 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 	pcs.Status.Errors = compoundErrorMsg
 
 	if err := r.client.Status().Update(context.TODO(), pcs); err != nil {
-		logrus.Error(err, "CS Reconcile: Failed to update PiraeusControllerSet status")
+		logrus.Error(err, "CS Reconcile: Failed to update KnopicControllerSet status")
 		return reconcile.Result{}, err
 	}
 
@@ -298,7 +298,7 @@ func (r *ReconcilePiraeusControllerSet) Reconcile(request reconcile.Request) (re
 	return reconcile.Result{RequeueAfter: time.Minute * 1}, compoundError
 }
 
-func (r *ReconcilePiraeusControllerSet) reconcileControllers(pcs *piraeusv1alpha1.PiraeusControllerSet) []error {
+func (r *ReconcileKnopicControllerSet) reconcileControllers(pcs *knopicv1alpha1.KnopicControllerSet) []error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
@@ -323,7 +323,7 @@ func (r *ReconcilePiraeusControllerSet) reconcileControllers(pcs *piraeusv1alpha
 	return []error{r.reconcileControllerNodeWithControllers(pcs, pods.Items[0])}
 }
 
-func (r *ReconcilePiraeusControllerSet) reconcileControllerNodeWithControllers(pcs *piraeusv1alpha1.PiraeusControllerSet, pod corev1.Pod) error {
+func (r *ReconcileKnopicControllerSet) reconcileControllerNodeWithControllers(pcs *knopicv1alpha1.KnopicControllerSet, pod corev1.Pod) error {
 	log := logrus.WithFields(logrus.Fields{
 		"podName":      pod.Name,
 		"podNameSpace": pod.Namespace,
@@ -337,7 +337,7 @@ func (r *ReconcilePiraeusControllerSet) reconcileControllerNodeWithControllers(p
 
 	ctrl := pcs.Status.ControllerStatus
 	if ctrl == nil {
-		pcs.Status.ControllerStatus = &piraeusv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName}
+		pcs.Status.ControllerStatus = &knopicv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName}
 		ctrl = pcs.Status.ControllerStatus
 	}
 
@@ -371,25 +371,25 @@ func (r *ReconcilePiraeusControllerSet) reconcileControllerNodeWithControllers(p
 	}
 
 	if pcs.Status.SatelliteStatuses == nil {
-		pcs.Status.SatelliteStatuses = make(map[string]*piraeusv1alpha1.SatelliteStatus)
+		pcs.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
 	}
 
 	for i := range nodes {
 		node := &nodes[i]
 
-		pcs.Status.SatelliteStatuses[node.Name] = &piraeusv1alpha1.SatelliteStatus{
-			NodeStatus: piraeusv1alpha1.NodeStatus{
+		pcs.Status.SatelliteStatuses[node.Name] = &knopicv1alpha1.SatelliteStatus{
+			NodeStatus: knopicv1alpha1.NodeStatus{
 				NodeName:               node.Name,
 				RegisteredOnController: true,
 			},
 			ConnectionStatus:    node.ConnectionStatus,
-			StoragePoolStatuses: make(map[string]*piraeusv1alpha1.StoragePoolStatus),
+			StoragePoolStatuses: make(map[string]*knopicv1alpha1.StoragePoolStatus),
 		}
 
 		for i := range node.StoragePools {
 			pool := node.StoragePools[i]
 
-			pcs.Status.SatelliteStatuses[node.Name].StoragePoolStatuses[pool.StoragePoolName] = piraeusv1alpha1.NewStoragePoolStatus(pool)
+			pcs.Status.SatelliteStatuses[node.Name].StoragePoolStatuses[pool.StoragePoolName] = knopicv1alpha1.NewStoragePoolStatus(pool)
 		}
 	}
 
@@ -397,16 +397,16 @@ func (r *ReconcilePiraeusControllerSet) reconcileControllerNodeWithControllers(p
 	return nil
 }
 
-func (r *ReconcilePiraeusControllerSet) finalizeControllerSet(pcs *piraeusv1alpha1.PiraeusControllerSet) error {
+func (r *ReconcileKnopicControllerSet) finalizeControllerSet(pcs *knopicv1alpha1.KnopicControllerSet) error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
 		"spec":      fmt.Sprintf("%+v", pcs.Spec),
 	})
-	log.Info("CS finalizeControllerSet: found PiraeusControllerSet marked for deletion, finalizing...")
+	log.Info("CS finalizeControllerSet: found KnopicControllerSet marked for deletion, finalizing...")
 
 	if mdutil.HasFinalizer(pcs, linstorControllerFinalizer) {
-		// Run finalization logic for PiraeusControllerSet. If the
+		// Run finalization logic for KnopicControllerSet. If the
 		// finalization logic fails, don't remove the finalizer so
 		// that we can retry during the next reconciliation.
 
@@ -444,7 +444,7 @@ func (r *ReconcilePiraeusControllerSet) finalizeControllerSet(pcs *piraeusv1alph
 	return nil
 }
 
-func (r *ReconcilePiraeusControllerSet) addFinalizer(pcs *piraeusv1alpha1.PiraeusControllerSet) error {
+func (r *ReconcileKnopicControllerSet) addFinalizer(pcs *knopicv1alpha1.KnopicControllerSet) error {
 	mdutil.AddFinalizer(pcs, linstorControllerFinalizer)
 
 	err := r.client.Update(context.TODO(), pcs)
@@ -454,7 +454,7 @@ func (r *ReconcilePiraeusControllerSet) addFinalizer(pcs *piraeusv1alpha1.Piraeu
 	return nil
 }
 
-func (r *ReconcilePiraeusControllerSet) deleteFinalizer(pcs *piraeusv1alpha1.PiraeusControllerSet) error {
+func (r *ReconcileKnopicControllerSet) deleteFinalizer(pcs *knopicv1alpha1.KnopicControllerSet) error {
 	mdutil.DeleteFinalizer(pcs, linstorControllerFinalizer)
 
 	err := r.client.Update(context.TODO(), pcs)
@@ -464,7 +464,7 @@ func (r *ReconcilePiraeusControllerSet) deleteFinalizer(pcs *piraeusv1alpha1.Pir
 	return nil
 }
 
-func newStatefulSetForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *appsv1.StatefulSet {
+func newStatefulSetForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *appsv1.StatefulSet {
 	var (
 		replicas = int32(1)
 	)
@@ -487,11 +487,11 @@ func newStatefulSetForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *appsv1.Sta
 					Labels:    labels,
 				},
 				Spec: corev1.PodSpec{
-					PriorityClassName: kubeSpec.PiraeusCSPriorityClassName,
+					PriorityClassName: kubeSpec.KnopicCSPriorityClassName,
 					Containers: []corev1.Container{
 						{
 							Name:            "linstor-controller",
-							Image:           kubeSpec.PiraeusServerImage + ":" + kubeSpec.PiraeusVersion,
+							Image:           kubeSpec.KnopicServerImage + ":" + kubeSpec.KnopicVersion,
 							Args:            []string{"startController"}, // Run linstor-controller.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
@@ -548,13 +548,18 @@ func newStatefulSetForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *appsv1.Sta
 									},
 								}}},
 					},
+					ImagePullSecrets: []corev1.LocalObjectReference{
+						{
+							Name: pcs.Name[0 : len(pcs.Name)-3],
+						},
+					},
 				},
 			},
 		},
 	}
 }
 
-func newServiceForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *corev1.Service {
+func newServiceForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.Service {
 	return &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      pcs.Name,
@@ -576,10 +581,10 @@ func newServiceForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *corev1.Service
 	}
 }
 
-func newConfigMapForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *corev1.ConfigMap {
+func newConfigMapForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.ConfigMap {
 
 	if pcs.Spec.EtcdURL == "" {
-		// pcs.Spec.EtcdURL = "etcd://etcd-piraeus:2379"
+		// pcs.Spec.EtcdURL = "etcd://etcd-knopic:2379"
 		pcs.Spec.EtcdURL = "etcd://" + pcs.Name + "-etcd:2379"
 	}
 
@@ -599,9 +604,9 @@ func newConfigMapForPCS(pcs *piraeusv1alpha1.PiraeusControllerSet) *corev1.Confi
 	return cm
 }
 
-func pcsLabels(pcs *piraeusv1alpha1.PiraeusControllerSet) map[string]string {
+func pcsLabels(pcs *knopicv1alpha1.KnopicControllerSet) map[string]string {
 	return map[string]string{
 		"app":  pcs.Name,
-		"role": "piraeus-controller",
+		"role": "knopic-controller",
 	}
 }

@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,10 @@ limitations under the License.
 package controller
 
 import (
-	"github.com/piraeusdatastore/piraeus-operator/pkg/controller/piraeusnodeset"
+	"github.com/knopic/knopic-operator/pkg/controller/knopicnodeset"
 )
 
 func init() {
 	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
-	AddToManagerFuncs = append(AddToManagerFuncs, piraeusnodeset.Add)
+	AddToManagerFuncs = append(AddToManagerFuncs, knopicnodeset.Add)
 }

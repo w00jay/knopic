@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ limitations under the License.
 package apis
 
 import (
-	"github.com/piraeusdatastore/piraeus-operator/pkg/apis/piraeus/v1alpha1"
+	"github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
 )
 
 func init() {

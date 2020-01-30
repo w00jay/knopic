@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: piraeus-operator
+  name: knopic-operator
 rules:
 - apiGroups:
   - ""
@@ -36,7 +36,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - piraeus-operator
+  - knopic-operator
   resources:
   - deployments/finalizers
   verbs:
@@ -54,41 +54,41 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - piraeus.linbit.com
+  - knopic.linbit.com
   resources:
   - '*'
-  - piraeuscontrollersets
+  - knopiccontrollersets
   verbs:
   - '*'
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: piraeus-operator
+  name: knopic-operator
 subjects:
 - kind: ServiceAccount
-  name: piraeus-operator
+  name: knopic-operator
 roleRef:
   kind: Role
-  name: piraeus-operator
+  name: knopic-operator
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: piraeus-operator
+  name: knopic-operator
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: piraeuscontrollersets.piraeus.linbit.com
+  name: knopiccontrollersets.knopic.linbit.com
 spec:
-  group: piraeus.linbit.com
+  group: knopic.linbit.com
   names:
-    kind: PiraeusControllerSet
-    listKind: PiraeusControllerSetList
-    plural: piraeuscontrollersets
-    singular: piraeuscontrollerset
+    kind: KnopicControllerSet
+    listKind: KnopicControllerSetList
+    plural: knopiccontrollersets
+    singular: knopiccontrollerset
   scope: Namespaced
   subresources:
     status: {}
@@ -120,14 +120,14 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: piraeusnodesets.piraeus.linbit.com
+  name: knopicnodesets.knopic.linbit.com
 spec:
-  group: piraeus.linbit.com
+  group: knopic.linbit.com
   names:
-    kind: PiraeusNodeSet
-    listKind: PiraeusNodeSetList
-    plural: piraeusnodesets
-    singular: piraeusnodeset
+    kind: KnopicNodeSet
+    listKind: KnopicNodeSetList
+    plural: knopicnodesets
+    singular: knopicnodeset
   scope: Namespaced
   subresources:
     status: {}
@@ -159,31 +159,31 @@ spec:
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: piraeus-priority-class
+  name: knopic-priority-class
 value: 1000000
 globalDefault: false
-description: "Priority class for piraeus components"
+description: "Priority class for knopic components"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: piraeus-operator
+  name: knopic-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: piraeus-operator
+      name: knopic-operator
   template:
     metadata:
       labels:
-        name: piraeus-operator
+        name: knopic-operator
     spec:
-      serviceAccountName: piraeus-operator
+      serviceAccountName: knopic-operator
       containers:
-        - name: piraeus-operator
-          image: "quay.io/piraeusdatastore/piraeus-operator"
+        - name: knopic-operator
+          image: "quay.io/knopic/knopic-operator"
           command:
-          - piraeus-operator
+          - knopic-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
@@ -195,5 +195,5 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "piraeus-operator"
+              value: "knopic-operator"
 ---

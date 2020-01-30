@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: piraeus-operator
+  name: knopic-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: piraeus-operator
+      name: knopic-operator
   template:
     metadata:
       labels:
-        name: piraeus-operator
+        name: knopic-operator
     spec:
-      serviceAccountName: piraeus-operator
+      serviceAccountName: knopic-operator
       containers:
-        - name: piraeus-operator
+        - name: knopic-operator
           # Replace this with the built image name
           image: REPLACE_IMAGE
           command:
-          - piraeus-operator
+          - knopic-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
@@ -30,4 +30,4 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "piraeus-operator"
+              value: "knopic-operator"

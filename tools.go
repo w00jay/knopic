@@ -1,7 +1,7 @@
 // +build tools
 
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");

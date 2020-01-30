@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,8 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// PiraeusControllerSetSpec defines the desired state of PiraeusControllerSet
-type PiraeusControllerSetSpec struct {
+// KnopicControllerSetSpec defines the desired state of KnopicControllerSet
+type KnopicControllerSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -33,8 +33,8 @@ type PiraeusControllerSetSpec struct {
 	EtcdURL string `json:"etcdURL"`
 }
 
-// PiraeusControllerSetStatus defines the observed state of PiraeusControllerSet
-type PiraeusControllerSetStatus struct {
+// KnopicControllerSetStatus defines the observed state of KnopicControllerSet
+type KnopicControllerSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -53,26 +53,26 @@ type PiraeusControllerSetStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PiraeusControllerSet is the Schema for the piraeuscontrollersets API
+// KnopicControllerSet is the Schema for the knopiccontrollersets API
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=piraeuscontrollersets,scope=Namespaced
-type PiraeusControllerSet struct {
+// +kubebuilder:resource:path=knopiccontrollersets,scope=Namespaced
+type KnopicControllerSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   PiraeusControllerSetSpec   `json:"spec,omitempty"`
-	Status PiraeusControllerSetStatus `json:"status,omitempty"`
+	Spec   KnopicControllerSetSpec   `json:"spec,omitempty"`
+	Status KnopicControllerSetStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PiraeusControllerSetList contains a list of PiraeusControllerSet
-type PiraeusControllerSetList struct {
+// KnopicControllerSetList contains a list of KnopicControllerSet
+type KnopicControllerSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PiraeusControllerSet `json:"items"`
+	Items           []KnopicControllerSet `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&PiraeusControllerSet{}, &PiraeusControllerSetList{})
+	SchemeBuilder.Register(&KnopicControllerSet{}, &KnopicControllerSetList{})
 }

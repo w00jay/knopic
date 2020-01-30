@@ -1,20 +1,20 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: piraeuscontrollersets.piraeus.linbit.com
+  name: knopiccontrollersets.knopic.linbit.com
 spec:
-  group: piraeus.linbit.com
+  group: knopic.linbit.com
   names:
-    kind: PiraeusControllerSet
-    listKind: PiraeusControllerSetList
-    plural: piraeuscontrollersets
-    singular: piraeuscontrollerset
+    kind: KnopicControllerSet
+    listKind: KnopicControllerSetList
+    plural: knopiccontrollersets
+    singular: knopiccontrollerset
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: PiraeusControllerSet is the Schema for the piraeuscontrollersets
+      description: KnopicControllerSet is the Schema for the knopiccontrollersets
         API
       properties:
         apiVersion:
@@ -30,10 +30,10 @@ spec:
         metadata:
           type: object
         spec:
-          description: PiraeusControllerSetSpec defines the desired state of PiraeusControllerSet
+          description: KnopicControllerSetSpec defines the desired state of KnopicControllerSet
           type: object
         status:
-          description: PiraeusControllerSetStatus defines the observed state of PiraeusControllerSet
+          description: KnopicControllerSetStatus defines the observed state of KnopicControllerSet
           type: object
       type: object
   version: v1alpha1

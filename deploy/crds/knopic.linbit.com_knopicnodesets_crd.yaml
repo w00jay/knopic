@@ -1,20 +1,20 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: piraeusnodesets.piraeus.linbit.com
+  name: knopicnodesets.knopic.linbit.com
 spec:
-  group: piraeus.linbit.com
+  group: knopic.linbit.com
   names:
-    kind: PiraeusNodeSet
-    listKind: PiraeusNodeSetList
-    plural: piraeusnodesets
-    singular: piraeusnodeset
+    kind: KnopicNodeSet
+    listKind: KnopicNodeSetList
+    plural: knopicnodesets
+    singular: knopicnodeset
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: PiraeusNodeSet is the Schema for the piraeusnodesets API
+      description: KnopicNodeSet is the Schema for the knopicnodesets API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -29,10 +29,10 @@ spec:
         metadata:
           type: object
         spec:
-          description: PiraeusNodeSetSpec defines the desired state of PiraeusNodeSet
+          description: KnopicNodeSetSpec defines the desired state of KnopicNodeSet
           type: object
         status:
-          description: PiraeusNodeSetStatus defines the observed state of PiraeusNodeSet
+          description: KnopicNodeSetStatus defines the observed state of KnopicNodeSet
           type: object
       type: object
   version: v1alpha1

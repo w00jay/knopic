@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,27 +49,29 @@ var (
 
 const selectorPrefix = "linstor.linbit.com/"
 
-// Kubernetes node labels that are an opt-in selector to run piraeus pods when
+// Kubernetes node labels that are an opt-in selector to run knopic pods when
 // set to "true".
 const (
-	// PiraeusSatelliteNode label to mark node eligible to run piraeus-node pods.
-	PiraeusNode = selectorPrefix + "piraeus-node"
+	// KnopicSatelliteNode label to mark node eligible to run knopic-node pods.
+	KnopicNode = selectorPrefix + "knopic-node"
 )
 
-// PiraeusPriorityClassName is the name of the PriorityClass set up in the
-// example yaml used by important piraeus components.
-const PiraeusCSPriorityClassName = "piraeus-cs-priority-class"
-const PiraeusNSPriorityClassName = "piraeus-ns-priority-class"
+// KnopicPriorityClassName is the name of the PriorityClass set up in the
+// example yaml used by important knopic components.
+const KnopicCSPriorityClassName = "knopic-cs-priority-class"
+const KnopicNSPriorityClassName = "knopic-ns-priority-class"
 
 const (
-	// PiraeusServerImage is the repo/tag for piraeus-server. The controller
+	// KnopicServerImage is the repo/tag for knopic-server. The controller
 	// and node use the same image with different commands.
-	PiraeusServerImage = "quay.io/piraeusdatastore/piraeus-server"
-	// PiraeusVersion must must match exactly in the ControllerSet and the NodeSet
+	//KnopicServerImage = "quay.io/piraeusdatastore/piraeus-server"
+	KnopicServerImage = "woojay/my-piraeus-server"
+	// KnopicVersion must must match exactly in the ControllerSet and the NodeSet
 	// since the linstor controller and satellite versions must also match exactly.
-	PiraeusVersion = "v1.2.1"
-	// PiraeusKernelModImage is the worker (aka satellite) image for each node
-	PiraeusKernelModImage = "quay.io/piraeusdatastore/drbd9-centos7"
-	// PiraeusKernelModVersion is the release tag for the above image
-	PiraeusKernelModVersion = "v9.0.21"
+	KnopicVersion = "v1.2.1"
+	// KnopicKernelModImage is the worker (aka satellite) image for each node
+	// KnopicKernelModImage = "quay.io/piraeusdatastore/drbd9-centos7"
+	KnopicKernelModImage = "woojay/my-drbd"
+	// KnopicKernelModVersion is the release tag for the above image
+	KnopicKernelModVersion = "v9.0.21"
 )

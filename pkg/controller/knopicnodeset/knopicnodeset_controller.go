@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package piraeusnodeset
+package knopicnodeset
 
 import (
 	"context"
@@ -26,10 +26,10 @@ import (
 	"time"
 
 	lapi "github.com/LINBIT/golinstor/client"
-	piraeusv1alpha1 "github.com/piraeusdatastore/piraeus-operator/pkg/apis/piraeus/v1alpha1"
-	mdutil "github.com/piraeusdatastore/piraeus-operator/pkg/k8s/metadata/util"
-	kubeSpec "github.com/piraeusdatastore/piraeus-operator/pkg/k8s/spec"
-	lc "github.com/piraeusdatastore/piraeus-operator/pkg/linstor/client"
+	knopicv1alpha1 "github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
+	mdutil "github.com/knopic/knopic-operator/pkg/k8s/metadata/util"
+	kubeSpec "github.com/knopic/knopic-operator/pkg/k8s/spec"
+	lc "github.com/knopic/knopic-operator/pkg/linstor/client"
 
 	"github.com/sirupsen/logrus"
 	apps "k8s.io/api/apps/v1"
@@ -58,7 +58,7 @@ func init() {
 }
 
 var log = logrus.WithFields(logrus.Fields{
-	"controller": "PiraeusNodeSet",
+	"controller": "KnopicNodeSet",
 })
 
 // linstorNodeFinalizer can only be removed if the linstor node containers are
@@ -66,7 +66,7 @@ var log = logrus.WithFields(logrus.Fields{
 // to them.
 const linstorNodeFinalizer = "finalizer.linstor-node.linbit.com"
 
-// Add creates a new PiraeusNodeSet Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new KnopicNodeSet Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -74,27 +74,27 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcilePiraeusNodeSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileKnopicNodeSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
 	log.Debug("NS add: Adding a PNS controller ")
-	c, err := controller.New("piraeusnodeset-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("knopicnodeset-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource PiraeusNodeSet
-	err = c.Watch(&source.Kind{Type: &piraeusv1alpha1.PiraeusNodeSet{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource KnopicNodeSet
+	err = c.Watch(&source.Kind{Type: &knopicv1alpha1.KnopicNodeSet{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
 	err = c.Watch(&source.Kind{Type: &apps.DaemonSet{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &piraeusv1alpha1.PiraeusNodeSet{},
+		OwnerType:    &knopicv1alpha1.KnopicNodeSet{},
 	})
 	if err != nil {
 		return err
@@ -103,11 +103,11 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// blank assignment to verify that ReconcilePiraeusNodeSet implements reconcile.Reconciler
-var _ reconcile.Reconciler = &ReconcilePiraeusNodeSet{}
+// blank assignment to verify that ReconcileKnopicNodeSet implements reconcile.Reconciler
+var _ reconcile.Reconciler = &ReconcileKnopicNodeSet{}
 
-// ReconcilePiraeusNodeSet reconciles a PiraeusNodeSet object
-type ReconcilePiraeusNodeSet struct {
+// ReconcileKnopicNodeSet reconciles a KnopicNodeSet object
+type ReconcileKnopicNodeSet struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client        client.Client
@@ -125,17 +125,17 @@ func newCompoundErrorMsg(errs []error) []string {
 	return errStrs
 }
 
-// Reconcile reads that state of the cluster for a PiraeusNodeSet object and makes changes based on
-// the state read and what is in the PiraeusNodeSet.Spec
+// Reconcile reads that state of the cluster for a KnopicNodeSet object and makes changes based on
+// the state read and what is in the KnopicNodeSet.Spec
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
 // This function is a mini-main function and has a lot of boilerplate code
 // that doesn't make a lot of sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
-	// Fetch the PiraeusNodeSet instance
-	pns := &piraeusv1alpha1.PiraeusNodeSet{}
+	// Fetch the KnopicNodeSet instance
+	pns := &knopicv1alpha1.KnopicNodeSet{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, pns)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -152,25 +152,25 @@ func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcil
 		"resquestName":      request.Name,
 		"resquestNamespace": request.Namespace,
 	})
-	log.Info("NS Reconcile: reconciling PiraeusNodeSet")
+	log.Info("NS Reconcile: reconciling KnopicNodeSet")
 
 	logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
 		"spec":      fmt.Sprintf("%+v", pns.Spec),
-	}).Debug("NS Reconcile: found PiraeusNodeSet")
+	}).Debug("NS Reconcile: found KnopicNodeSet")
 
 	if pns.Status.SatelliteStatuses == nil {
-		pns.Status.SatelliteStatuses = make(map[string]*piraeusv1alpha1.SatelliteStatus)
+		pns.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
 	}
 	if pns.Spec.StoragePools == nil {
-		pns.Spec.StoragePools = &piraeusv1alpha1.StoragePools{}
+		pns.Spec.StoragePools = &knopicv1alpha1.StoragePools{}
 	}
 	if pns.Spec.StoragePools.LVMPools == nil {
-		pns.Spec.StoragePools.LVMPools = make([]*piraeusv1alpha1.StoragePoolLVM, 0)
+		pns.Spec.StoragePools.LVMPools = make([]*knopicv1alpha1.StoragePoolLVM, 0)
 	}
 	if pns.Spec.StoragePools.LVMThinPools == nil {
-		pns.Spec.StoragePools.LVMThinPools = make([]*piraeusv1alpha1.StoragePoolLVMThin, 0)
+		pns.Spec.StoragePools.LVMThinPools = make([]*knopicv1alpha1.StoragePoolLVMThin, 0)
 	}
 
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pns)
@@ -200,7 +200,7 @@ func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcil
 	// Define a service for the controller.
 	ctrlService := newServiceForPNS(pns)
 
-	// Set PiraeusControllerSet instance as the owner and controller
+	// Set KnopicControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pns, ctrlService, r.scheme); err != nil {
 		logrus.Debug("NS SVC Controller did not set correctly")
 		return reconcile.Result{}, err
@@ -225,7 +225,7 @@ func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcil
 	// Define a new DaemonSet
 	ds := newDaemonSetforPNS(pns)
 
-	// Set PiraeusNodeSet pns as the owner and controller for the daemon set
+	// Set KnopicNodeSet pns as the owner and controller for the daemon set
 	if err := controllerutil.SetControllerReference(pns, ds, r.scheme); err != nil {
 		logrus.Debug("NS DS Controller did not set correctly")
 		return reconcile.Result{}, err
@@ -269,7 +269,7 @@ func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcil
 	pns.Status.Errors = compoundErrorMsg
 
 	if err := r.client.Status().Update(context.TODO(), pns); err != nil {
-		logrus.Error(err, "NS Reconcile: Failed to update PiraeusNodeSet status")
+		logrus.Error(err, "NS Reconcile: Failed to update KnopicNodeSet status")
 		return reconcile.Result{}, err
 	}
 
@@ -288,7 +288,7 @@ func (r *ReconcilePiraeusNodeSet) Reconcile(request reconcile.Request) (reconcil
 // This function is a mini-main function and has a lot of boilerplate code that doesn't make a lot of
 // sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcilePiraeusNodeSet) reconcileSatNodes(pns *piraeusv1alpha1.PiraeusNodeSet) []error {
+func (r *ReconcileKnopicNodeSet) reconcileSatNodes(pns *knopicv1alpha1.KnopicNodeSet) []error {
 
 	pods := &corev1.PodList{}
 	labelSelector := labels.SelectorFromSet(pnsLabels(pns))
@@ -301,7 +301,7 @@ func (r *ReconcilePiraeusNodeSet) reconcileSatNodes(pns *piraeusv1alpha1.Piraeus
 	}
 
 	type satStat struct {
-		sat *piraeusv1alpha1.SatelliteStatus
+		sat *knopicv1alpha1.SatelliteStatus
 		err error
 	}
 
@@ -328,13 +328,13 @@ func (r *ReconcilePiraeusNodeSet) reconcileSatNodes(pns *piraeusv1alpha1.Piraeus
 
 		sat, ok := pns.Status.SatelliteStatuses[pod.Spec.NodeName]
 		if !ok {
-			pns.Status.SatelliteStatuses[pod.Spec.NodeName] = &piraeusv1alpha1.SatelliteStatus{
-				NodeStatus: piraeusv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName},
+			pns.Status.SatelliteStatuses[pod.Spec.NodeName] = &knopicv1alpha1.SatelliteStatus{
+				NodeStatus: knopicv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName},
 			}
 			sat = pns.Status.SatelliteStatuses[pod.Spec.NodeName]
 		}
 		if sat.StoragePoolStatuses == nil {
-			sat.StoragePoolStatuses = make(map[string]*piraeusv1alpha1.StoragePoolStatus)
+			sat.StoragePoolStatuses = make(map[string]*knopicv1alpha1.StoragePoolStatus)
 		}
 
 		go func() {
@@ -396,7 +396,7 @@ func (r *ReconcilePiraeusNodeSet) reconcileSatNodes(pns *piraeusv1alpha1.Piraeus
 	return compoundError
 }
 
-func (r *ReconcilePiraeusNodeSet) reconcileSatNodeWithController(sat *piraeusv1alpha1.SatelliteStatus, pod corev1.Pod) error {
+func (r *ReconcileKnopicNodeSet) reconcileSatNodeWithController(sat *knopicv1alpha1.SatelliteStatus, pod corev1.Pod) error {
 
 	// Mark this true on successful exit from this function.
 	sat.RegisteredOnController = false
@@ -439,7 +439,7 @@ func (r *ReconcilePiraeusNodeSet) reconcileSatNodeWithController(sat *piraeusv1a
 	return nil
 }
 
-func (r *ReconcilePiraeusNodeSet) reconcileStoragePoolsOnNode(sat *piraeusv1alpha1.SatelliteStatus, pools []piraeusv1alpha1.StoragePool, pod corev1.Pod) error {
+func (r *ReconcileKnopicNodeSet) reconcileStoragePoolsOnNode(sat *knopicv1alpha1.SatelliteStatus, pools []knopicv1alpha1.StoragePool, pod corev1.Pod) error {
 	log := logrus.WithFields(logrus.Fields{
 		"podName":      pod.Name,
 		"podNameSpace": pod.Namespace,
@@ -458,7 +458,7 @@ func (r *ReconcilePiraeusNodeSet) reconcileStoragePoolsOnNode(sat *piraeusv1alph
 			return err
 		}
 
-		status := piraeusv1alpha1.NewStoragePoolStatus(p)
+		status := knopicv1alpha1.NewStoragePoolStatus(p)
 
 		log.WithFields(logrus.Fields{
 			"storagePool": fmt.Sprintf("%+v", status),
@@ -473,7 +473,7 @@ func (r *ReconcilePiraeusNodeSet) reconcileStoragePoolsOnNode(sat *piraeusv1alph
 	return nil
 }
 
-func newDaemonSetforPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *apps.DaemonSet {
+func newDaemonSetforPNS(pns *knopicv1alpha1.KnopicNodeSet) *apps.DaemonSet {
 	labels := pnsLabels(pns)
 	controllerName := pns.Name[0:len(pns.Name)-3] + "-cs"
 	ds := &apps.DaemonSet{
@@ -498,7 +498,7 @@ func newDaemonSetforPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *apps.DaemonSet {
 									{
 										MatchExpressions: []corev1.NodeSelectorRequirement{
 											{
-												Key:      kubeSpec.PiraeusNode,
+												Key:      kubeSpec.KnopicNode,
 												Operator: corev1.NodeSelectorOpIn,
 												Values:   []string{"true"},
 											},
@@ -510,11 +510,11 @@ func newDaemonSetforPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *apps.DaemonSet {
 					},
 					HostNetwork:       true, // INFO: Per Roland, set to true
 					DNSPolicy:         corev1.DNSClusterFirstWithHostNet,
-					PriorityClassName: kubeSpec.PiraeusNSPriorityClassName,
+					PriorityClassName: kubeSpec.KnopicNSPriorityClassName,
 					Containers: []corev1.Container{
 						{
 							Name:            "linstor-satellite",
-							Image:           kubeSpec.PiraeusServerImage + ":" + kubeSpec.PiraeusVersion,
+							Image:           kubeSpec.KnopicServerImage + ":" + kubeSpec.KnopicVersion,
 							Args:            []string{"startSatellite"}, // Run linstor-satellite.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
@@ -588,6 +588,11 @@ func newDaemonSetforPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *apps.DaemonSet {
 									Type: &kubeSpec.HostPathDirectoryOrCreateType,
 								}}},
 					},
+					ImagePullSecrets: []corev1.LocalObjectReference{
+						{
+							Name: pns.Name[0 : len(pns.Name)-3],
+						},
+					},
 				},
 			},
 		},
@@ -600,7 +605,7 @@ func newDaemonSetforPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *apps.DaemonSet {
 	return daemonSetWithDRBDKernelModuleInjection(ds)
 }
 
-func newServiceForPNS(pns *piraeusv1alpha1.PiraeusNodeSet) *corev1.Service {
+func newServiceForPNS(pns *knopicv1alpha1.KnopicNodeSet) *corev1.Service {
 	controllerName := pns.Name[0:len(pns.Name)-3] + "-cs"
 
 	return &corev1.Service{
@@ -630,7 +635,7 @@ func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet) *apps.DaemonSet 
 	ds.Spec.Template.Spec.InitContainers = []corev1.Container{
 		{
 			Name:            "drbd-kernel-module-injector",
-			Image:           kubeSpec.PiraeusKernelModImage + ":" + kubeSpec.PiraeusKernelModVersion, // bionic
+			Image:           kubeSpec.KnopicKernelModImage + ":" + kubeSpec.KnopicKernelModVersion, // bionic
 			ImagePullPolicy: corev1.PullIfNotPresent,
 			SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 			VolumeMounts: []corev1.VolumeMount{
@@ -662,16 +667,16 @@ func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet) *apps.DaemonSet 
 	return ds
 }
 
-func pnsLabels(pns *piraeusv1alpha1.PiraeusNodeSet) map[string]string {
+func pnsLabels(pns *knopicv1alpha1.KnopicNodeSet) map[string]string {
 	return map[string]string{
 		"app":  pns.Name,
-		"role": "piraeus-node",
+		"role": "knopic-node",
 	}
 }
 
 // aggregateStoragePools appends all disparate StoragePool types together, so they can be processed together.
-func (r *ReconcilePiraeusNodeSet) aggregateStoragePools(pns *piraeusv1alpha1.PiraeusNodeSet) []piraeusv1alpha1.StoragePool {
-	var pools = make([]piraeusv1alpha1.StoragePool, 0)
+func (r *ReconcileKnopicNodeSet) aggregateStoragePools(pns *knopicv1alpha1.KnopicNodeSet) []knopicv1alpha1.StoragePool {
+	var pools = make([]knopicv1alpha1.StoragePool, 0)
 
 	for _, thickPool := range pns.Spec.StoragePools.LVMPools {
 		pools = append(pools, thickPool)
@@ -691,7 +696,7 @@ func (r *ReconcilePiraeusNodeSet) aggregateStoragePools(pns *piraeusv1alpha1.Pir
 	return pools
 }
 
-func (r *ReconcilePiraeusNodeSet) finalizeNode(pns *piraeusv1alpha1.PiraeusNodeSet, nodeName string) error {
+func (r *ReconcileKnopicNodeSet) finalizeNode(pns *knopicv1alpha1.KnopicNodeSet, nodeName string) error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
@@ -718,7 +723,7 @@ func (r *ReconcilePiraeusNodeSet) finalizeNode(pns *piraeusv1alpha1.PiraeusNodeS
 	return nil
 }
 
-func (r *ReconcilePiraeusNodeSet) addFinalizer(pns *piraeusv1alpha1.PiraeusNodeSet) error {
+func (r *ReconcileKnopicNodeSet) addFinalizer(pns *knopicv1alpha1.KnopicNodeSet) error {
 	mdutil.AddFinalizer(pns, linstorNodeFinalizer)
 
 	err := r.client.Update(context.TODO(), pns)
@@ -728,7 +733,7 @@ func (r *ReconcilePiraeusNodeSet) addFinalizer(pns *piraeusv1alpha1.PiraeusNodeS
 	return nil
 }
 
-func (r *ReconcilePiraeusNodeSet) deleteFinalizer(pns *piraeusv1alpha1.PiraeusNodeSet) error {
+func (r *ReconcileKnopicNodeSet) deleteFinalizer(pns *knopicv1alpha1.KnopicNodeSet) error {
 	mdutil.DeleteFinalizer(pns, linstorNodeFinalizer)
 
 	err := r.client.Update(context.TODO(), pns)
@@ -738,16 +743,16 @@ func (r *ReconcilePiraeusNodeSet) deleteFinalizer(pns *piraeusv1alpha1.PiraeusNo
 	return nil
 }
 
-func (r *ReconcilePiraeusNodeSet) finalizeSatelliteSet(pns *piraeusv1alpha1.PiraeusNodeSet) []error {
+func (r *ReconcileKnopicNodeSet) finalizeSatelliteSet(pns *knopicv1alpha1.KnopicNodeSet) []error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
 		"spec":      fmt.Sprintf("%+v", pns.Spec),
 	})
-	log.Info("found PiraeusNodeSet marked for deletion, finalizing...")
+	log.Info("found KnopicNodeSet marked for deletion, finalizing...")
 
 	if mdutil.HasFinalizer(pns, linstorNodeFinalizer) {
-		// Run finalization logic for PiraeusNodeSet. If the
+		// Run finalization logic for KnopicNodeSet. If the
 		// finalization logic fails, don't remove the finalizer so
 		// that we can retry during the next reconciliation.
 		var errs = make([]error, 0)

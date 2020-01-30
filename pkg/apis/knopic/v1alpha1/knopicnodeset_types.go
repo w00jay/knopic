@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +24,21 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// PiraeusNodeSetSpec defines the desired state of PiraeusNodeSet
-type PiraeusNodeSetSpec struct {
+// KnopicNodeSetSpec defines the desired state of KnopicNodeSet
+type KnopicNodeSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
 
-	// StoragePools is a list of StoragePools for PiraeusNodeSet to manage.
+	// StoragePools is a list of StoragePools for KnopicNodeSet to manage.
 	StoragePools *StoragePools `json:"storagePools"`
 	//DisableDRBDKernelModuleInjection turns off automatic injection of the DRBD
 	// kernel module on the host system when set to true.
 	DisableDRBDKernelModuleInjection bool `json:"disableDRBDKernelModuleInjection"`
 }
 
-// PiraeusNodeSetStatus defines the observed state of PiraeusNodeSet
-type PiraeusNodeSetStatus struct {
+// KnopicNodeSetStatus defines the observed state of KnopicNodeSet
+type KnopicNodeSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -55,26 +55,26 @@ type PiraeusNodeSetStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PiraeusNodeSet is the Schema for the piraeusnodesets API
+// KnopicNodeSet is the Schema for the knopicnodesets API
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=piraeusnodesets,scope=Namespaced
-type PiraeusNodeSet struct {
+// +kubebuilder:resource:path=knopicnodesets,scope=Namespaced
+type KnopicNodeSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   PiraeusNodeSetSpec   `json:"spec,omitempty"`
-	Status PiraeusNodeSetStatus `json:"status,omitempty"`
+	Spec   KnopicNodeSetSpec   `json:"spec,omitempty"`
+	Status KnopicNodeSetStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PiraeusNodeSetList contains a list of PiraeusNodeSet
-type PiraeusNodeSetList struct {
+// KnopicNodeSetList contains a list of KnopicNodeSet
+type KnopicNodeSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []PiraeusNodeSet `json:"items"`
+	Items           []KnopicNodeSet `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&PiraeusNodeSet{}, &PiraeusNodeSetList{})
+	SchemeBuilder.Register(&KnopicNodeSet{}, &KnopicNodeSetList{})
 }

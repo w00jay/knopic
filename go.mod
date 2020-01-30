@@ -1,4 +1,4 @@
-module github.com/piraeusdatastore/piraeus-operator
+module github.com/knopic/knopic-operator
 
 go 1.13
 

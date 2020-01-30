@@ -1,5 +1,5 @@
 /*
-Piraeus Operator
+Knopic Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package piraeus contains piraeus API versions.
-//
-// This file ensures Go source parsers acknowledge the piraeus package
-// and any child packages. It can be removed if any other Go source files are
-// added to this package.
-package piraeus
+package controller
+
+import (
+	"github.com/knopic/knopic-operator/pkg/controller/knopiccontrollerset"
+)
+
+func init() {
+	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
+	AddToManagerFuncs = append(AddToManagerFuncs, knopiccontrollerset.Add)
+}
