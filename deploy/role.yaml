@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: knopic-operator
+  name: linstor-operator
 rules:
 - apiGroups:
   - ""
@@ -48,7 +48,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - knopic-operator
+  - linstor-operator
   resources:
   - deployments/finalizers
   verbs:
@@ -67,17 +67,17 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - knopic.linbit.com
+  - linstor.linbit.com
   resources:
   - '*'
-  - knopiccontrollersets
+  - linstorcontrollersets
   verbs:
   - '*'
 - apiGroups:
-  - knopic.linbit.com
+  - linstor.linbit.com
   resources:
   - '*'
-  - knopicnodesets
+  - linstornodesets
   verbs:
   - create
   - delete

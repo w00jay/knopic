@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ limitations under the License.
 package apis
 
 import (
-	"github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
+	"github.com/w00jay/knopic/pkg/apis/linstor/v1alpha1"
 )
 
 func init() {

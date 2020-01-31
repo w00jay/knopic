@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package knopicnodeset
+package linstornodeset
 
 import (
 	"context"
@@ -26,10 +26,10 @@ import (
 	"time"
 
 	lapi "github.com/LINBIT/golinstor/client"
-	knopicv1alpha1 "github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
-	mdutil "github.com/knopic/knopic-operator/pkg/k8s/metadata/util"
-	kubeSpec "github.com/knopic/knopic-operator/pkg/k8s/spec"
-	lc "github.com/knopic/knopic-operator/pkg/linstor/client"
+	linstorv1alpha1 "github.com/w00jay/knopic/pkg/apis/linstor/v1alpha1"
+	mdutil "github.com/w00jay/knopic/pkg/k8s/metadata/util"
+	kubeSpec "github.com/w00jay/knopic/pkg/k8s/spec"
+	lc "github.com/w00jay/knopic/pkg/linstor/client"
 
 	"github.com/sirupsen/logrus"
 	apps "k8s.io/api/apps/v1"
@@ -58,7 +58,7 @@ func init() {
 }
 
 var log = logrus.WithFields(logrus.Fields{
-	"controller": "KnopicNodeSet",
+	"controller": "LinstorNodeSet",
 })
 
 // linstorNodeFinalizer can only be removed if the linstor node containers are
@@ -66,7 +66,7 @@ var log = logrus.WithFields(logrus.Fields{
 // to them.
 const linstorNodeFinalizer = "finalizer.linstor-node.linbit.com"
 
-// Add creates a new KnopicNodeSet Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new LinstorNodeSet Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -74,27 +74,27 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileKnopicNodeSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileLinstorNodeSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
 	log.Debug("NS add: Adding a PNS controller ")
-	c, err := controller.New("knopicnodeset-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("linstornodeset-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource KnopicNodeSet
-	err = c.Watch(&source.Kind{Type: &knopicv1alpha1.KnopicNodeSet{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource LinstorNodeSet
+	err = c.Watch(&source.Kind{Type: &linstorv1alpha1.LinstorNodeSet{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
 	err = c.Watch(&source.Kind{Type: &apps.DaemonSet{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &knopicv1alpha1.KnopicNodeSet{},
+		OwnerType:    &linstorv1alpha1.LinstorNodeSet{},
 	})
 	if err != nil {
 		return err
@@ -103,11 +103,11 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// blank assignment to verify that ReconcileKnopicNodeSet implements reconcile.Reconciler
-var _ reconcile.Reconciler = &ReconcileKnopicNodeSet{}
+// blank assignment to verify that ReconcileLinstorNodeSet implements reconcile.Reconciler
+var _ reconcile.Reconciler = &ReconcileLinstorNodeSet{}
 
-// ReconcileKnopicNodeSet reconciles a KnopicNodeSet object
-type ReconcileKnopicNodeSet struct {
+// ReconcileLinstorNodeSet reconciles a LinstorNodeSet object
+type ReconcileLinstorNodeSet struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client        client.Client
@@ -125,17 +125,17 @@ func newCompoundErrorMsg(errs []error) []string {
 	return errStrs
 }
 
-// Reconcile reads that state of the cluster for a KnopicNodeSet object and makes changes based on
-// the state read and what is in the KnopicNodeSet.Spec
+// Reconcile reads that state of the cluster for a LinstorNodeSet object and makes changes based on
+// the state read and what is in the LinstorNodeSet.Spec
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
 // This function is a mini-main function and has a lot of boilerplate code
 // that doesn't make a lot of sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileLinstorNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
-	// Fetch the KnopicNodeSet instance
-	pns := &knopicv1alpha1.KnopicNodeSet{}
+	// Fetch the LinstorNodeSet instance
+	pns := &linstorv1alpha1.LinstorNodeSet{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, pns)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -152,25 +152,25 @@ func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile
 		"resquestName":      request.Name,
 		"resquestNamespace": request.Namespace,
 	})
-	log.Info("NS Reconcile: reconciling KnopicNodeSet")
+	log.Info("NS Reconcile: reconciling LinstorNodeSet")
 
 	logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
 		"spec":      fmt.Sprintf("%+v", pns.Spec),
-	}).Debug("NS Reconcile: found KnopicNodeSet")
+	}).Debug("NS Reconcile: found LinstorNodeSet")
 
 	if pns.Status.SatelliteStatuses == nil {
-		pns.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
+		pns.Status.SatelliteStatuses = make(map[string]*linstorv1alpha1.SatelliteStatus)
 	}
 	if pns.Spec.StoragePools == nil {
-		pns.Spec.StoragePools = &knopicv1alpha1.StoragePools{}
+		pns.Spec.StoragePools = &linstorv1alpha1.StoragePools{}
 	}
 	if pns.Spec.StoragePools.LVMPools == nil {
-		pns.Spec.StoragePools.LVMPools = make([]*knopicv1alpha1.StoragePoolLVM, 0)
+		pns.Spec.StoragePools.LVMPools = make([]*linstorv1alpha1.StoragePoolLVM, 0)
 	}
 	if pns.Spec.StoragePools.LVMThinPools == nil {
-		pns.Spec.StoragePools.LVMThinPools = make([]*knopicv1alpha1.StoragePoolLVMThin, 0)
+		pns.Spec.StoragePools.LVMThinPools = make([]*linstorv1alpha1.StoragePoolLVMThin, 0)
 	}
 
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pns)
@@ -200,7 +200,7 @@ func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile
 	// Define a service for the controller.
 	ctrlService := newServiceForPNS(pns)
 
-	// Set KnopicControllerSet instance as the owner and controller
+	// Set LinstorControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pns, ctrlService, r.scheme); err != nil {
 		logrus.Debug("NS SVC Controller did not set correctly")
 		return reconcile.Result{}, err
@@ -225,7 +225,7 @@ func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile
 	// Define a new DaemonSet
 	ds := newDaemonSetforPNS(pns)
 
-	// Set KnopicNodeSet pns as the owner and controller for the daemon set
+	// Set LinstorNodeSet pns as the owner and controller for the daemon set
 	if err := controllerutil.SetControllerReference(pns, ds, r.scheme); err != nil {
 		logrus.Debug("NS DS Controller did not set correctly")
 		return reconcile.Result{}, err
@@ -269,7 +269,7 @@ func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile
 	pns.Status.Errors = compoundErrorMsg
 
 	if err := r.client.Status().Update(context.TODO(), pns); err != nil {
-		logrus.Error(err, "NS Reconcile: Failed to update KnopicNodeSet status")
+		logrus.Error(err, "NS Reconcile: Failed to update LinstorNodeSet status")
 		return reconcile.Result{}, err
 	}
 
@@ -288,7 +288,7 @@ func (r *ReconcileKnopicNodeSet) Reconcile(request reconcile.Request) (reconcile
 // This function is a mini-main function and has a lot of boilerplate code that doesn't make a lot of
 // sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcileKnopicNodeSet) reconcileSatNodes(pns *knopicv1alpha1.KnopicNodeSet) []error {
+func (r *ReconcileLinstorNodeSet) reconcileSatNodes(pns *linstorv1alpha1.LinstorNodeSet) []error {
 
 	pods := &corev1.PodList{}
 	labelSelector := labels.SelectorFromSet(pnsLabels(pns))
@@ -301,7 +301,7 @@ func (r *ReconcileKnopicNodeSet) reconcileSatNodes(pns *knopicv1alpha1.KnopicNod
 	}
 
 	type satStat struct {
-		sat *knopicv1alpha1.SatelliteStatus
+		sat *linstorv1alpha1.SatelliteStatus
 		err error
 	}
 
@@ -328,13 +328,13 @@ func (r *ReconcileKnopicNodeSet) reconcileSatNodes(pns *knopicv1alpha1.KnopicNod
 
 		sat, ok := pns.Status.SatelliteStatuses[pod.Spec.NodeName]
 		if !ok {
-			pns.Status.SatelliteStatuses[pod.Spec.NodeName] = &knopicv1alpha1.SatelliteStatus{
-				NodeStatus: knopicv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName},
+			pns.Status.SatelliteStatuses[pod.Spec.NodeName] = &linstorv1alpha1.SatelliteStatus{
+				NodeStatus: linstorv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName},
 			}
 			sat = pns.Status.SatelliteStatuses[pod.Spec.NodeName]
 		}
 		if sat.StoragePoolStatuses == nil {
-			sat.StoragePoolStatuses = make(map[string]*knopicv1alpha1.StoragePoolStatus)
+			sat.StoragePoolStatuses = make(map[string]*linstorv1alpha1.StoragePoolStatus)
 		}
 
 		go func() {
@@ -396,7 +396,7 @@ func (r *ReconcileKnopicNodeSet) reconcileSatNodes(pns *knopicv1alpha1.KnopicNod
 	return compoundError
 }
 
-func (r *ReconcileKnopicNodeSet) reconcileSatNodeWithController(sat *knopicv1alpha1.SatelliteStatus, pod corev1.Pod) error {
+func (r *ReconcileLinstorNodeSet) reconcileSatNodeWithController(sat *linstorv1alpha1.SatelliteStatus, pod corev1.Pod) error {
 
 	// Mark this true on successful exit from this function.
 	sat.RegisteredOnController = false
@@ -439,7 +439,7 @@ func (r *ReconcileKnopicNodeSet) reconcileSatNodeWithController(sat *knopicv1alp
 	return nil
 }
 
-func (r *ReconcileKnopicNodeSet) reconcileStoragePoolsOnNode(sat *knopicv1alpha1.SatelliteStatus, pools []knopicv1alpha1.StoragePool, pod corev1.Pod) error {
+func (r *ReconcileLinstorNodeSet) reconcileStoragePoolsOnNode(sat *linstorv1alpha1.SatelliteStatus, pools []linstorv1alpha1.StoragePool, pod corev1.Pod) error {
 	log := logrus.WithFields(logrus.Fields{
 		"podName":      pod.Name,
 		"podNameSpace": pod.Namespace,
@@ -458,7 +458,7 @@ func (r *ReconcileKnopicNodeSet) reconcileStoragePoolsOnNode(sat *knopicv1alpha1
 			return err
 		}
 
-		status := knopicv1alpha1.NewStoragePoolStatus(p)
+		status := linstorv1alpha1.NewStoragePoolStatus(p)
 
 		log.WithFields(logrus.Fields{
 			"storagePool": fmt.Sprintf("%+v", status),
@@ -473,7 +473,7 @@ func (r *ReconcileKnopicNodeSet) reconcileStoragePoolsOnNode(sat *knopicv1alpha1
 	return nil
 }
 
-func newDaemonSetforPNS(pns *knopicv1alpha1.KnopicNodeSet) *apps.DaemonSet {
+func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 	labels := pnsLabels(pns)
 	controllerName := pns.Name[0:len(pns.Name)-3] + "-cs"
 	ds := &apps.DaemonSet{
@@ -498,7 +498,7 @@ func newDaemonSetforPNS(pns *knopicv1alpha1.KnopicNodeSet) *apps.DaemonSet {
 									{
 										MatchExpressions: []corev1.NodeSelectorRequirement{
 											{
-												Key:      kubeSpec.KnopicNode,
+												Key:      kubeSpec.LinstorNode,
 												Operator: corev1.NodeSelectorOpIn,
 												Values:   []string{"true"},
 											},
@@ -510,11 +510,11 @@ func newDaemonSetforPNS(pns *knopicv1alpha1.KnopicNodeSet) *apps.DaemonSet {
 					},
 					HostNetwork:       true, // INFO: Per Roland, set to true
 					DNSPolicy:         corev1.DNSClusterFirstWithHostNet,
-					PriorityClassName: kubeSpec.KnopicNSPriorityClassName,
+					PriorityClassName: kubeSpec.LinstorNSPriorityClassName,
 					Containers: []corev1.Container{
 						{
 							Name:            "linstor-satellite",
-							Image:           kubeSpec.KnopicServerImage + ":" + kubeSpec.KnopicVersion,
+							Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
 							Args:            []string{"startSatellite"}, // Run linstor-satellite.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
@@ -605,7 +605,7 @@ func newDaemonSetforPNS(pns *knopicv1alpha1.KnopicNodeSet) *apps.DaemonSet {
 	return daemonSetWithDRBDKernelModuleInjection(ds)
 }
 
-func newServiceForPNS(pns *knopicv1alpha1.KnopicNodeSet) *corev1.Service {
+func newServiceForPNS(pns *linstorv1alpha1.LinstorNodeSet) *corev1.Service {
 	controllerName := pns.Name[0:len(pns.Name)-3] + "-cs"
 
 	return &corev1.Service{
@@ -635,7 +635,7 @@ func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet) *apps.DaemonSet 
 	ds.Spec.Template.Spec.InitContainers = []corev1.Container{
 		{
 			Name:            "drbd-kernel-module-injector",
-			Image:           kubeSpec.KnopicKernelModImage + ":" + kubeSpec.KnopicKernelModVersion, // bionic
+			Image:           kubeSpec.LinstorKernelModImage + ":" + kubeSpec.LinstorKernelModVersion, // bionic
 			ImagePullPolicy: corev1.PullIfNotPresent,
 			SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 			VolumeMounts: []corev1.VolumeMount{
@@ -667,16 +667,16 @@ func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet) *apps.DaemonSet 
 	return ds
 }
 
-func pnsLabels(pns *knopicv1alpha1.KnopicNodeSet) map[string]string {
+func pnsLabels(pns *linstorv1alpha1.LinstorNodeSet) map[string]string {
 	return map[string]string{
 		"app":  pns.Name,
-		"role": "knopic-node",
+		"role": "linstor-node",
 	}
 }
 
 // aggregateStoragePools appends all disparate StoragePool types together, so they can be processed together.
-func (r *ReconcileKnopicNodeSet) aggregateStoragePools(pns *knopicv1alpha1.KnopicNodeSet) []knopicv1alpha1.StoragePool {
-	var pools = make([]knopicv1alpha1.StoragePool, 0)
+func (r *ReconcileLinstorNodeSet) aggregateStoragePools(pns *linstorv1alpha1.LinstorNodeSet) []linstorv1alpha1.StoragePool {
+	var pools = make([]linstorv1alpha1.StoragePool, 0)
 
 	for _, thickPool := range pns.Spec.StoragePools.LVMPools {
 		pools = append(pools, thickPool)
@@ -696,7 +696,7 @@ func (r *ReconcileKnopicNodeSet) aggregateStoragePools(pns *knopicv1alpha1.Knopi
 	return pools
 }
 
-func (r *ReconcileKnopicNodeSet) finalizeNode(pns *knopicv1alpha1.KnopicNodeSet, nodeName string) error {
+func (r *ReconcileLinstorNodeSet) finalizeNode(pns *linstorv1alpha1.LinstorNodeSet, nodeName string) error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
@@ -723,7 +723,7 @@ func (r *ReconcileKnopicNodeSet) finalizeNode(pns *knopicv1alpha1.KnopicNodeSet,
 	return nil
 }
 
-func (r *ReconcileKnopicNodeSet) addFinalizer(pns *knopicv1alpha1.KnopicNodeSet) error {
+func (r *ReconcileLinstorNodeSet) addFinalizer(pns *linstorv1alpha1.LinstorNodeSet) error {
 	mdutil.AddFinalizer(pns, linstorNodeFinalizer)
 
 	err := r.client.Update(context.TODO(), pns)
@@ -733,7 +733,7 @@ func (r *ReconcileKnopicNodeSet) addFinalizer(pns *knopicv1alpha1.KnopicNodeSet)
 	return nil
 }
 
-func (r *ReconcileKnopicNodeSet) deleteFinalizer(pns *knopicv1alpha1.KnopicNodeSet) error {
+func (r *ReconcileLinstorNodeSet) deleteFinalizer(pns *linstorv1alpha1.LinstorNodeSet) error {
 	mdutil.DeleteFinalizer(pns, linstorNodeFinalizer)
 
 	err := r.client.Update(context.TODO(), pns)
@@ -743,16 +743,16 @@ func (r *ReconcileKnopicNodeSet) deleteFinalizer(pns *knopicv1alpha1.KnopicNodeS
 	return nil
 }
 
-func (r *ReconcileKnopicNodeSet) finalizeSatelliteSet(pns *knopicv1alpha1.KnopicNodeSet) []error {
+func (r *ReconcileLinstorNodeSet) finalizeSatelliteSet(pns *linstorv1alpha1.LinstorNodeSet) []error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
 		"namespace": pns.Namespace,
 		"spec":      fmt.Sprintf("%+v", pns.Spec),
 	})
-	log.Info("found KnopicNodeSet marked for deletion, finalizing...")
+	log.Info("found LinstorNodeSet marked for deletion, finalizing...")
 
 	if mdutil.HasFinalizer(pns, linstorNodeFinalizer) {
-		// Run finalization logic for KnopicNodeSet. If the
+		// Run finalization logic for LinstorNodeSet. If the
 		// finalization logic fails, don't remove the finalizer so
 		// that we can retry during the next reconciliation.
 		var errs = make([]error, 0)

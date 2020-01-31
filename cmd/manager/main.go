@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +28,8 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/rest"
 
-	"github.com/knopic/knopic-operator/pkg/apis"
-	"github.com/knopic/knopic-operator/pkg/controller"
+	"github.com/w00jay/knopic/pkg/apis"
+	"github.com/w00jay/knopic/pkg/controller"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"
@@ -38,7 +38,7 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/metrics"
 	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
-	version "github.com/knopic/knopic-operator/version"
+	version "github.com/w00jay/knopic/version"
 	"github.com/spf13/pflag"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -101,7 +101,7 @@ func main() {
 
 	ctx := context.TODO()
 	// Become the leader before proceeding
-	err = leader.Become(ctx, "knopic-operator-lock")
+	err = leader.Become(ctx, "linstor-operator-lock")
 	if err != nil {
 		log.Error(err, "")
 		os.Exit(1)

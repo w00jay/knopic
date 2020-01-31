@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +24,21 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// KnopicNodeSetSpec defines the desired state of KnopicNodeSet
-type KnopicNodeSetSpec struct {
+// LinstorNodeSetSpec defines the desired state of LinstorNodeSet
+type LinstorNodeSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
 
-	// StoragePools is a list of StoragePools for KnopicNodeSet to manage.
+	// StoragePools is a list of StoragePools for LinstorNodeSet to manage.
 	StoragePools *StoragePools `json:"storagePools"`
 	//DisableDRBDKernelModuleInjection turns off automatic injection of the DRBD
 	// kernel module on the host system when set to true.
 	DisableDRBDKernelModuleInjection bool `json:"disableDRBDKernelModuleInjection"`
 }
 
-// KnopicNodeSetStatus defines the observed state of KnopicNodeSet
-type KnopicNodeSetStatus struct {
+// LinstorNodeSetStatus defines the observed state of LinstorNodeSet
+type LinstorNodeSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -55,26 +55,26 @@ type KnopicNodeSetStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// KnopicNodeSet is the Schema for the knopicnodesets API
+// LinstorNodeSet is the Schema for the linstornodesets API
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=knopicnodesets,scope=Namespaced
-type KnopicNodeSet struct {
+// +kubebuilder:resource:path=linstornodesets,scope=Namespaced
+type LinstorNodeSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KnopicNodeSetSpec   `json:"spec,omitempty"`
-	Status KnopicNodeSetStatus `json:"status,omitempty"`
+	Spec   LinstorNodeSetSpec   `json:"spec,omitempty"`
+	Status LinstorNodeSetStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// KnopicNodeSetList contains a list of KnopicNodeSet
-type KnopicNodeSetList struct {
+// LinstorNodeSetList contains a list of LinstorNodeSet
+type LinstorNodeSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KnopicNodeSet `json:"items"`
+	Items           []LinstorNodeSet `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KnopicNodeSet{}, &KnopicNodeSetList{})
+	SchemeBuilder.Register(&LinstorNodeSet{}, &LinstorNodeSetList{})
 }

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: knopic-operator
+  name: linstor-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: knopic-operator
+      name: linstor-operator
   template:
     metadata:
       labels:
-        name: knopic-operator
+        name: linstor-operator
     spec:
-      serviceAccountName: knopic-operator
+      serviceAccountName: linstor-operator
       containers:
-        - name: knopic-operator
+        - name: linstor-operator
           # Replace this with the built image name
           image: REPLACE_IMAGE
           command:
-          - knopic-operator
+          - linstor-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
@@ -30,4 +30,4 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "knopic-operator"
+              value: "linstor-operator"

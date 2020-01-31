@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 contains API Schema definitions for the knopic v1alpha1 API group
+// NOTE: Boilerplate only.  Ignore this file.
+
+// Package v1alpha1 contains API Schema definitions for the linstor v1alpha1 API group
 // +k8s:deepcopy-gen=package,register
-// +groupName=knopic.linbit.com
+// +groupName=linstor.linbit.com
 package v1alpha1
+
+import (
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/controller-runtime/pkg/scheme"
+)
+
+var (
+	// SchemeGroupVersion is group version used to register these objects
+	SchemeGroupVersion = schema.GroupVersion{Group: "linstor.linbit.com", Version: "v1alpha1"}
+
+	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
+	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}
+)

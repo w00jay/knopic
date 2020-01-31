@@ -1,0 +1,7 @@
+apiVersion: linstor.linbit.com/v1alpha1
+kind: LinstorNodeSet
+metadata:
+  name: example-linstornodeset
+spec:
+  # Add fields here
+  size: 3

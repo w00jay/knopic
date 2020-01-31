@@ -1,20 +1,20 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: knopiccontrollersets.knopic.linbit.com
+  name: linstorcontrollersets.linstor.linbit.com
 spec:
-  group: knopic.linbit.com
+  group: linstor.linbit.com
   names:
-    kind: KnopicControllerSet
-    listKind: KnopicControllerSetList
-    plural: knopiccontrollersets
-    singular: knopiccontrollerset
+    kind: LinstorControllerSet
+    listKind: LinstorControllerSetList
+    plural: linstorcontrollersets
+    singular: linstorcontrollerset
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: KnopicControllerSet is the Schema for the knopiccontrollersets
+      description: LinstorControllerSet is the Schema for the linstorcontrollersets
         API
       properties:
         apiVersion:
@@ -30,10 +30,10 @@ spec:
         metadata:
           type: object
         spec:
-          description: KnopicControllerSetSpec defines the desired state of KnopicControllerSet
+          description: LinstorControllerSetSpec defines the desired state of LinstorControllerSet
           type: object
         status:
-          description: KnopicControllerSetStatus defines the observed state of KnopicControllerSet
+          description: LinstorControllerSetStatus defines the observed state of LinstorControllerSet
           type: object
       type: object
   version: v1alpha1

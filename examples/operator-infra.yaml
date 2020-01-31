@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: knopic-operator
+  name: linstor-operator
 rules:
 - apiGroups:
   - ""
@@ -36,7 +36,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - knopic-operator
+  - linstor-operator
   resources:
   - deployments/finalizers
   verbs:
@@ -54,41 +54,41 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - knopic.linbit.com
+  - linstor.linbit.com
   resources:
   - '*'
-  - knopiccontrollersets
+  - linstorcontrollersets
   verbs:
   - '*'
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: knopic-operator
+  name: linstor-operator
 subjects:
 - kind: ServiceAccount
-  name: knopic-operator
+  name: linstor-operator
 roleRef:
   kind: Role
-  name: knopic-operator
+  name: linstor-operator
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: knopic-operator
+  name: linstor-operator
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: knopiccontrollersets.knopic.linbit.com
+  name: linstorcontrollersets.linstor.linbit.com
 spec:
-  group: knopic.linbit.com
+  group: linstor.linbit.com
   names:
-    kind: KnopicControllerSet
-    listKind: KnopicControllerSetList
-    plural: knopiccontrollersets
-    singular: knopiccontrollerset
+    kind: LinstorControllerSet
+    listKind: LinstorControllerSetList
+    plural: linstorcontrollersets
+    singular: linstorcontrollerset
   scope: Namespaced
   subresources:
     status: {}
@@ -120,14 +120,14 @@ spec:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  name: knopicnodesets.knopic.linbit.com
+  name: linstornodesets.linstor.linbit.com
 spec:
-  group: knopic.linbit.com
+  group: linstor.linbit.com
   names:
-    kind: KnopicNodeSet
-    listKind: KnopicNodeSetList
-    plural: knopicnodesets
-    singular: knopicnodeset
+    kind: LinstorNodeSet
+    listKind: LinstorNodeSetList
+    plural: linstornodesets
+    singular: linstornodeset
   scope: Namespaced
   subresources:
     status: {}
@@ -159,31 +159,31 @@ spec:
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: knopic-priority-class
+  name: linstor-priority-class
 value: 1000000
 globalDefault: false
-description: "Priority class for knopic components"
+description: "Priority class for linstor components"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: knopic-operator
+  name: linstor-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: knopic-operator
+      name: linstor-operator
   template:
     metadata:
       labels:
-        name: knopic-operator
+        name: linstor-operator
     spec:
-      serviceAccountName: knopic-operator
+      serviceAccountName: linstor-operator
       containers:
-        - name: knopic-operator
-          image: "quay.io/knopic/knopic-operator"
+        - name: linstor-operator
+          image: "quay.io/linstor/linstor-operator"
           command:
-          - knopic-operator
+          - linstor-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
@@ -195,5 +195,5 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "knopic-operator"
+              value: "linstor-operator"
 ---

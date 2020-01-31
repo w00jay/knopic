@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,8 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// KnopicControllerSetSpec defines the desired state of KnopicControllerSet
-type KnopicControllerSetSpec struct {
+// LinstorControllerSetSpec defines the desired state of LinstorControllerSet
+type LinstorControllerSetSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -33,8 +33,8 @@ type KnopicControllerSetSpec struct {
 	EtcdURL string `json:"etcdURL"`
 }
 
-// KnopicControllerSetStatus defines the observed state of KnopicControllerSet
-type KnopicControllerSetStatus struct {
+// LinstorControllerSetStatus defines the observed state of LinstorControllerSet
+type LinstorControllerSetStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -53,26 +53,26 @@ type KnopicControllerSetStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// KnopicControllerSet is the Schema for the knopiccontrollersets API
+// LinstorControllerSet is the Schema for the linstorcontrollersets API
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=knopiccontrollersets,scope=Namespaced
-type KnopicControllerSet struct {
+// +kubebuilder:resource:path=linstorcontrollersets,scope=Namespaced
+type LinstorControllerSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KnopicControllerSetSpec   `json:"spec,omitempty"`
-	Status KnopicControllerSetStatus `json:"status,omitempty"`
+	Spec   LinstorControllerSetSpec   `json:"spec,omitempty"`
+	Status LinstorControllerSetStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// KnopicControllerSetList contains a list of KnopicControllerSet
-type KnopicControllerSetList struct {
+// LinstorControllerSetList contains a list of LinstorControllerSet
+type LinstorControllerSetList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KnopicControllerSet `json:"items"`
+	Items           []LinstorControllerSet `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&KnopicControllerSet{}, &KnopicControllerSetList{})
+	SchemeBuilder.Register(&LinstorControllerSet{}, &LinstorControllerSetList{})
 }

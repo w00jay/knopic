@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,10 @@ limitations under the License.
 package controller
 
 import (
-	"github.com/knopic/knopic-operator/pkg/controller/knopicnodeset"
+	"github.com/w00jay/knopic/pkg/controller/linstornodeset"
 )
 
 func init() {
 	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
-	AddToManagerFuncs = append(AddToManagerFuncs, knopicnodeset.Add)
+	AddToManagerFuncs = append(AddToManagerFuncs, linstornodeset.Add)
 }

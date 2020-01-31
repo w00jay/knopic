@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package knopiccontrollerset
+package linstorcontrollerset
 
 import (
 	"context"
@@ -27,10 +27,10 @@ import (
 	lapiconst "github.com/LINBIT/golinstor"
 	lapi "github.com/LINBIT/golinstor/client"
 
-	knopicv1alpha1 "github.com/knopic/knopic-operator/pkg/apis/knopic/v1alpha1"
-	mdutil "github.com/knopic/knopic-operator/pkg/k8s/metadata/util"
-	kubeSpec "github.com/knopic/knopic-operator/pkg/k8s/spec"
-	lc "github.com/knopic/knopic-operator/pkg/linstor/client"
+	linstorv1alpha1 "github.com/w00jay/knopic/pkg/apis/linstor/v1alpha1"
+	mdutil "github.com/w00jay/knopic/pkg/k8s/metadata/util"
+	kubeSpec "github.com/w00jay/knopic/pkg/k8s/spec"
+	lc "github.com/w00jay/knopic/pkg/linstor/client"
 
 	"github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
@@ -52,19 +52,13 @@ import (
 
 const linstorControllerFinalizer = "finalizer.linstor-controller.linbit.com"
 
-// var log = logf.Log.WithName("controller_knopiccontrollerset")
-
 func init() {
 	logrus.SetFormatter(&logrus.TextFormatter{})
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.DebugLevel)
 }
 
-// var log = logrus.WithFields(logrus.Fields{
-// 	"controller": "KnopicControllerSet",
-// })
-
-// Add creates a new KnopicControllerSet Controller and adds it to the Manager. The Manager will set fields on the Controller
+// Add creates a new LinstorControllerSet Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	return add(mgr, newReconciler(mgr))
@@ -72,26 +66,26 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileKnopicControllerSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	return &ReconcileLinstorControllerSet{client: mgr.GetClient(), scheme: mgr.GetScheme()}
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
-	c, err := controller.New("knopiccontrollerset-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("linstorcontrollerset-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
-	// Watch for changes to primary resource KnopicControllerSet
-	err = c.Watch(&source.Kind{Type: &knopicv1alpha1.KnopicControllerSet{}}, &handler.EnqueueRequestForObject{})
+	// Watch for changes to primary resource LinstorControllerSet
+	err = c.Watch(&source.Kind{Type: &linstorv1alpha1.LinstorControllerSet{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
 	err = c.Watch(&source.Kind{Type: &appsv1.StatefulSet{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &knopicv1alpha1.KnopicControllerSet{},
+		OwnerType:    &linstorv1alpha1.LinstorControllerSet{},
 	})
 	if err != nil {
 		return err
@@ -100,11 +94,11 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// blank assignment to verify that ReconcileKnopicControllerSet implements reconcile.Reconciler
-var _ reconcile.Reconciler = &ReconcileKnopicControllerSet{}
+// blank assignment to verify that ReconcileLinstorControllerSet implements reconcile.Reconciler
+var _ reconcile.Reconciler = &ReconcileLinstorControllerSet{}
 
-// ReconcileKnopicControllerSet reconciles a KnopicControllerSet object
-type ReconcileKnopicControllerSet struct {
+// ReconcileLinstorControllerSet reconciles a LinstorControllerSet object
+type ReconcileLinstorControllerSet struct {
 	// This client, initialized using mgr.Client() above, is a split client
 	// that reads objects from the cache and writes to the apiserver
 	client        client.Client
@@ -124,8 +118,8 @@ func newCompoundErrorMsg(errs []error) []string {
 	return errStrs
 }
 
-// Reconcile reads that state of the cluster for a KnopicControllerSet object and makes changes based
-// on the state read and what is in the KnopicControllerSet.Spec
+// Reconcile reads that state of the cluster for a LinstorControllerSet object and makes changes based
+// on the state read and what is in the LinstorControllerSet.Spec
 // TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
 // a Pod as an example
 // Note:
@@ -134,7 +128,7 @@ func newCompoundErrorMsg(errs []error) []string {
 // This function is a mini-main function and has a lot of boilerplate code that doesn't make a lot of
 // sense to put elsewhere, so don't lint it for cyclomatic complexity.
 // nolint:gocyclo
-func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileLinstorControllerSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
 	reqLogger := logrus.WithFields(logrus.Fields{
 		"resquestName":      request.Name,
@@ -143,8 +137,8 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 
 	reqLogger.Info("CS Reconcile: Entering")
 
-	// Fetch the KnopicControllerSet instance
-	pcs := &knopicv1alpha1.KnopicControllerSet{}
+	// Fetch the LinstorControllerSet instance
+	pcs := &linstorv1alpha1.LinstorControllerSet{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, pcs)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -163,16 +157,16 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 		"name":              pcs.Name,
 		"namespace":         pcs.Namespace,
 	})
-	log.Info("reconciling KnopicControllerSet")
+	log.Info("reconciling LinstorControllerSet")
 
 	logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
 		"spec":      fmt.Sprintf("%+v", pcs.Spec),
-	}).Debug("found KnopicControllerSet")
+	}).Debug("found LinstorControllerSet")
 
 	if pcs.Status.SatelliteStatuses == nil {
-		pcs.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
+		pcs.Status.SatelliteStatuses = make(map[string]*linstorv1alpha1.SatelliteStatus)
 	}
 
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pcs)
@@ -194,7 +188,7 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 
 	// Define a service for the controller.
 	ctrlService := newServiceForPCS(pcs)
-	// Set KnopicControllerSet instance as the owner and controller
+	// Set LinstorControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, ctrlService, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -221,7 +215,7 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 
 	// Define a configmap for the controller.
 	configMap := newConfigMapForPCS(pcs)
-	// Set KnopicControllerSet instance as the owner and controller
+	// Set LinstorControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, configMap, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -249,7 +243,7 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 	// Define a new StatefulSet object
 	ctrlSet := newStatefulSetForPCS(pcs)
 
-	// Set KnopicControllerSet instance as the owner and controller
+	// Set LinstorControllerSet instance as the owner and controller
 	if err := controllerutil.SetControllerReference(pcs, ctrlSet, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
@@ -282,7 +276,7 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 	pcs.Status.Errors = compoundErrorMsg
 
 	if err := r.client.Status().Update(context.TODO(), pcs); err != nil {
-		logrus.Error(err, "CS Reconcile: Failed to update KnopicControllerSet status")
+		logrus.Error(err, "CS Reconcile: Failed to update LinstorControllerSet status")
 		return reconcile.Result{}, err
 	}
 
@@ -298,7 +292,7 @@ func (r *ReconcileKnopicControllerSet) Reconcile(request reconcile.Request) (rec
 	return reconcile.Result{RequeueAfter: time.Minute * 1}, compoundError
 }
 
-func (r *ReconcileKnopicControllerSet) reconcileControllers(pcs *knopicv1alpha1.KnopicControllerSet) []error {
+func (r *ReconcileLinstorControllerSet) reconcileControllers(pcs *linstorv1alpha1.LinstorControllerSet) []error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
@@ -323,7 +317,7 @@ func (r *ReconcileKnopicControllerSet) reconcileControllers(pcs *knopicv1alpha1.
 	return []error{r.reconcileControllerNodeWithControllers(pcs, pods.Items[0])}
 }
 
-func (r *ReconcileKnopicControllerSet) reconcileControllerNodeWithControllers(pcs *knopicv1alpha1.KnopicControllerSet, pod corev1.Pod) error {
+func (r *ReconcileLinstorControllerSet) reconcileControllerNodeWithControllers(pcs *linstorv1alpha1.LinstorControllerSet, pod corev1.Pod) error {
 	log := logrus.WithFields(logrus.Fields{
 		"podName":      pod.Name,
 		"podNameSpace": pod.Namespace,
@@ -337,7 +331,7 @@ func (r *ReconcileKnopicControllerSet) reconcileControllerNodeWithControllers(pc
 
 	ctrl := pcs.Status.ControllerStatus
 	if ctrl == nil {
-		pcs.Status.ControllerStatus = &knopicv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName}
+		pcs.Status.ControllerStatus = &linstorv1alpha1.NodeStatus{NodeName: pod.Spec.NodeName}
 		ctrl = pcs.Status.ControllerStatus
 	}
 
@@ -371,25 +365,25 @@ func (r *ReconcileKnopicControllerSet) reconcileControllerNodeWithControllers(pc
 	}
 
 	if pcs.Status.SatelliteStatuses == nil {
-		pcs.Status.SatelliteStatuses = make(map[string]*knopicv1alpha1.SatelliteStatus)
+		pcs.Status.SatelliteStatuses = make(map[string]*linstorv1alpha1.SatelliteStatus)
 	}
 
 	for i := range nodes {
 		node := &nodes[i]
 
-		pcs.Status.SatelliteStatuses[node.Name] = &knopicv1alpha1.SatelliteStatus{
-			NodeStatus: knopicv1alpha1.NodeStatus{
+		pcs.Status.SatelliteStatuses[node.Name] = &linstorv1alpha1.SatelliteStatus{
+			NodeStatus: linstorv1alpha1.NodeStatus{
 				NodeName:               node.Name,
 				RegisteredOnController: true,
 			},
 			ConnectionStatus:    node.ConnectionStatus,
-			StoragePoolStatuses: make(map[string]*knopicv1alpha1.StoragePoolStatus),
+			StoragePoolStatuses: make(map[string]*linstorv1alpha1.StoragePoolStatus),
 		}
 
 		for i := range node.StoragePools {
 			pool := node.StoragePools[i]
 
-			pcs.Status.SatelliteStatuses[node.Name].StoragePoolStatuses[pool.StoragePoolName] = knopicv1alpha1.NewStoragePoolStatus(pool)
+			pcs.Status.SatelliteStatuses[node.Name].StoragePoolStatuses[pool.StoragePoolName] = linstorv1alpha1.NewStoragePoolStatus(pool)
 		}
 	}
 
@@ -397,16 +391,16 @@ func (r *ReconcileKnopicControllerSet) reconcileControllerNodeWithControllers(pc
 	return nil
 }
 
-func (r *ReconcileKnopicControllerSet) finalizeControllerSet(pcs *knopicv1alpha1.KnopicControllerSet) error {
+func (r *ReconcileLinstorControllerSet) finalizeControllerSet(pcs *linstorv1alpha1.LinstorControllerSet) error {
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pcs.Name,
 		"namespace": pcs.Namespace,
 		"spec":      fmt.Sprintf("%+v", pcs.Spec),
 	})
-	log.Info("CS finalizeControllerSet: found KnopicControllerSet marked for deletion, finalizing...")
+	log.Info("CS finalizeControllerSet: found LinstorControllerSet marked for deletion, finalizing...")
 
 	if mdutil.HasFinalizer(pcs, linstorControllerFinalizer) {
-		// Run finalization logic for KnopicControllerSet. If the
+		// Run finalization logic for LinstorControllerSet. If the
 		// finalization logic fails, don't remove the finalizer so
 		// that we can retry during the next reconciliation.
 
@@ -444,7 +438,7 @@ func (r *ReconcileKnopicControllerSet) finalizeControllerSet(pcs *knopicv1alpha1
 	return nil
 }
 
-func (r *ReconcileKnopicControllerSet) addFinalizer(pcs *knopicv1alpha1.KnopicControllerSet) error {
+func (r *ReconcileLinstorControllerSet) addFinalizer(pcs *linstorv1alpha1.LinstorControllerSet) error {
 	mdutil.AddFinalizer(pcs, linstorControllerFinalizer)
 
 	err := r.client.Update(context.TODO(), pcs)
@@ -454,7 +448,7 @@ func (r *ReconcileKnopicControllerSet) addFinalizer(pcs *knopicv1alpha1.KnopicCo
 	return nil
 }
 
-func (r *ReconcileKnopicControllerSet) deleteFinalizer(pcs *knopicv1alpha1.KnopicControllerSet) error {
+func (r *ReconcileLinstorControllerSet) deleteFinalizer(pcs *linstorv1alpha1.LinstorControllerSet) error {
 	mdutil.DeleteFinalizer(pcs, linstorControllerFinalizer)
 
 	err := r.client.Update(context.TODO(), pcs)
@@ -464,7 +458,7 @@ func (r *ReconcileKnopicControllerSet) deleteFinalizer(pcs *knopicv1alpha1.Knopi
 	return nil
 }
 
-func newStatefulSetForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *appsv1.StatefulSet {
+func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.StatefulSet {
 	var (
 		replicas = int32(1)
 	)
@@ -487,11 +481,11 @@ func newStatefulSetForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *appsv1.State
 					Labels:    labels,
 				},
 				Spec: corev1.PodSpec{
-					PriorityClassName: kubeSpec.KnopicCSPriorityClassName,
+					PriorityClassName: kubeSpec.LinstorCSPriorityClassName,
 					Containers: []corev1.Container{
 						{
 							Name:            "linstor-controller",
-							Image:           kubeSpec.KnopicServerImage + ":" + kubeSpec.KnopicVersion,
+							Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
 							Args:            []string{"startController"}, // Run linstor-controller.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
@@ -559,7 +553,7 @@ func newStatefulSetForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *appsv1.State
 	}
 }
 
-func newServiceForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.Service {
+func newServiceForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *corev1.Service {
 	return &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      pcs.Name,
@@ -581,10 +575,10 @@ func newServiceForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.Service {
 	}
 }
 
-func newConfigMapForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.ConfigMap {
+func newConfigMapForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *corev1.ConfigMap {
 
 	if pcs.Spec.EtcdURL == "" {
-		// pcs.Spec.EtcdURL = "etcd://etcd-knopic:2379"
+		// pcs.Spec.EtcdURL = "etcd://etcd-linstor:2379"
 		pcs.Spec.EtcdURL = "etcd://" + pcs.Name + "-etcd:2379"
 	}
 
@@ -604,9 +598,9 @@ func newConfigMapForPCS(pcs *knopicv1alpha1.KnopicControllerSet) *corev1.ConfigM
 	return cm
 }
 
-func pcsLabels(pcs *knopicv1alpha1.KnopicControllerSet) map[string]string {
+func pcsLabels(pcs *linstorv1alpha1.LinstorControllerSet) map[string]string {
 	return map[string]string{
 		"app":  pcs.Name,
-		"role": "knopic-controller",
+		"role": "linstor-controller",
 	}
 }

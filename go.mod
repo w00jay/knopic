@@ -1,4 +1,4 @@
-module github.com/knopic/knopic-operator
+module github.com/w00jay/knopic
 
 go 1.13
 

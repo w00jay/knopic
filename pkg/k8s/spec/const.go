@@ -1,5 +1,5 @@
 /*
-Knopic Operator
+Linstor Operator
 Copyright 2019 LINBIT USA, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,29 +49,29 @@ var (
 
 const selectorPrefix = "linstor.linbit.com/"
 
-// Kubernetes node labels that are an opt-in selector to run knopic pods when
+// Kubernetes node labels that are an opt-in selector to run linstor pods when
 // set to "true".
 const (
-	// KnopicSatelliteNode label to mark node eligible to run knopic-node pods.
-	KnopicNode = selectorPrefix + "knopic-node"
+	// LinstorSatelliteNode label to mark node eligible to run linstor-node pods.
+	LinstorNode = selectorPrefix + "linstor-node"
 )
 
-// KnopicPriorityClassName is the name of the PriorityClass set up in the
-// example yaml used by important knopic components.
-const KnopicCSPriorityClassName = "knopic-cs-priority-class"
-const KnopicNSPriorityClassName = "knopic-ns-priority-class"
+// LinstorPriorityClassName is the name of the PriorityClass set up in the
+// example yaml used by important linstor components.
+const LinstorCSPriorityClassName = "linstor-cs-priority-class"
+const LinstorNSPriorityClassName = "linstor-ns-priority-class"
 
 const (
-	// KnopicServerImage is the repo/tag for knopic-server. The controller
+	// LinstorServerImage is the repo/tag for linstor-server. The controller
 	// and node use the same image with different commands.
-	//KnopicServerImage = "quay.io/piraeusdatastore/piraeus-server"
-	KnopicServerImage = "woojay/my-piraeus-server"
-	// KnopicVersion must must match exactly in the ControllerSet and the NodeSet
+	//LinstorServerImage = "quay.io/piraeusdatastore/piraeus-server"
+	LinstorServerImage = "woojay/my-piraeus-server"
+	// LinstorVersion must must match exactly in the ControllerSet and the NodeSet
 	// since the linstor controller and satellite versions must also match exactly.
-	KnopicVersion = "v1.2.1"
-	// KnopicKernelModImage is the worker (aka satellite) image for each node
-	// KnopicKernelModImage = "quay.io/piraeusdatastore/drbd9-centos7"
-	KnopicKernelModImage = "woojay/my-drbd"
-	// KnopicKernelModVersion is the release tag for the above image
-	KnopicKernelModVersion = "v9.0.21"
+	LinstorVersion = "v1.2.1"
+	// LinstorKernelModImage is the worker (aka satellite) image for each node
+	// LinstorKernelModImage = "quay.io/piraeusdatastore/drbd9-centos7"
+	LinstorKernelModImage = "woojay/my-drbd"
+	// LinstorKernelModVersion is the release tag for the above image
+	LinstorKernelModVersion = "v9.0.21"
 )

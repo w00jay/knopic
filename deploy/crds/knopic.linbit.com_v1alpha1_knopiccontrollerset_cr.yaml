@@ -1,7 +1,0 @@
-apiVersion: knopic.linbit.com/v1alpha1
-kind: KnopicControllerSet
-metadata:
-  name: example-knopiccontrollerset
-spec:
-  # Add fields here
-  size: 3
