@@ -30,9 +30,66 @@ spec:
           type: object
         spec:
           description: LinstorNodeSetSpec defines the desired state of LinstorNodeSet
+          properties:
+            disableDRBDKernelModuleInjection:
+              description: DisableDRBDKernelModuleInjection turns off automatic injection
+                of the DRBD kernel module on the host system when set to true.
+              type: boolean
+            storagePools:
+              description: StoragePools is a list of StoragePools for LinstorNodeSet
+                to manage.
+              properties:
+                lvmPools:
+                  description: LVMPools for LinstorNodeSet to manage.
+                  items:
+                    description: StoragePoolLVM represents LVM storage pool to be
+                      managed by a LinstorNodeSet
+                    properties:
+                      name:
+                        description: Name of the storage pool.
+                        type: string
+                      volumeGroup:
+                        description: Name of underlying lvm group
+                        type: string
+                    required:
+                    - name
+                    - volumeGroup
+                    type: object
+                  type: array
+                lvmThinPools:
+                  description: LVMThinPools for LinstorNodeSet to manage.
+                  items:
+                    description: StoragePoolLVMThin represents LVM Thin storage pool
+                      to be managed by a LinstorNodeSet
+                    properties:
+                      thinVolume:
+                        description: Name of underlying lvm thin volume
+                        type: string
+                    required:
+                    - thinVolume
+                    type: object
+                  type: array
+              required:
+              - lvmPools
+              - lvmThinPools
+              type: object
+          required:
+          - disableDRBDKernelModuleInjection
+          - storagePools
           type: object
         status:
           description: LinstorNodeSetStatus defines the observed state of LinstorNodeSet
+          properties:
+            SatelliteStatuses:
+              description: SatelliteStatuses by hostname.
+            errors:
+              description: Errors remaining that will trigger reconciliations.
+              items:
+                type: string
+              type: array
+          required:
+          - SatelliteStatuses
+          - errors
           type: object
       type: object
   version: v1alpha1

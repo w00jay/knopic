@@ -31,9 +31,39 @@ spec:
           type: object
         spec:
           description: LinstorControllerSetSpec defines the desired state of LinstorControllerSet
+          properties:
+            etcdURL:
+              type: string
+          required:
+          - etcdURL
           type: object
         status:
           description: LinstorControllerSetStatus defines the observed state of LinstorControllerSet
+          properties:
+            ControllerStatus:
+              description: ControllerStatus information.
+              properties:
+                nodeName:
+                  description: The hostname of the kubelet running the node
+                  type: string
+                registeredOnController:
+                  description: Indicates if the node has been created on the controller.
+                  type: boolean
+              required:
+              - nodeName
+              - registeredOnController
+              type: object
+            SatelliteStatuses:
+              description: SatelliteStatuses by hostname.
+            errors:
+              description: Errors remaining that will trigger reconciliations.
+              items:
+                type: string
+              type: array
+          required:
+          - ControllerStatus
+          - SatelliteStatuses
+          - errors
           type: object
       type: object
   version: v1alpha1
