@@ -49,8 +49,30 @@ The operator can be deployed with Helm v3 chart in /charts.
 - Finally create a Helm release named `linstor-op` that will set up
   everything.
   ```
-  helm install linstor-op ./charts/piraeus -f ./charts/piraeus/values.yaml
+  helm install linstor-op ./charts/linstor -f ./charts/linstor/values.yaml
   ```
+### Terminating Helm release/deployment
+
+```
+helm delete linstor-op
+```
+will terminate the Linstor release.  However due to the Helm's current policy,
+the newly created Custom Resource Definitions named linstorcontrollerset and
+linstornodeset will __not__ be deleted by the command.  This will also cause
+the instances of those CRD's named `linstor-op-linstor-ns` and `linstor-op-linstor-cs` 
+to remain running.
+
+To terminate those instances after the helm delete command, run
+```
+kubectl patch linstorcontrollerset linstor-op-linstor-cs -p '{"metadata":{"finalizers":[]}}' --type=merge
+
+kubectl patch linstornodeset linstor-op-linstor-ns -p '{"metadata":{"finalizers":[]}}' --type=merge
+```
+
+After that, all the instances created by the Helm release will be terminated.  
+
+More information regarding Helm's current position on CRD's can be found 
+[here](https://helm.sh/docs/topics/chart_best_practices/custom_resource_definitions/#method-1-let-helm-do-it-for-you).
 
 ## Deployment without using Helm v3 chart
 
@@ -89,7 +111,7 @@ drbd.io repo.  The secret name must match the operator deployment.  The
 default name is `linstor`.  You can create a secret named `linstor` 
 like this;
 ```
-kubectl create secret docker-registry linstor-op --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
+kubectl create secret docker-registry linstor --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
 ```
 
 ### Deploy Operator
