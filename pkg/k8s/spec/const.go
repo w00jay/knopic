@@ -64,14 +64,13 @@ const LinstorNSPriorityClassName = "linstor-ns-priority-class"
 const (
 	// LinstorServerImage is the repo/tag for linstor-server. The controller
 	// and node use the same image with different commands.
-	//LinstorServerImage = "quay.io/piraeusdatastore/piraeus-server"
-	LinstorServerImage = "woojay/my-piraeus-server"
+	LinstorServerImage = "drbd.io/test-linstor-server"
 	// LinstorVersion must must match exactly in the ControllerSet and the NodeSet
 	// since the linstor controller and satellite versions must also match exactly.
 	LinstorVersion = "v1.2.1"
+
 	// LinstorKernelModImage is the worker (aka satellite) image for each node
-	// LinstorKernelModImage = "quay.io/piraeusdatastore/drbd9-centos7"
-	LinstorKernelModImage = "woojay/my-drbd"
+	LinstorKernelModImage = "drbd.io/test-drbd"
 	// LinstorKernelModVersion is the release tag for the above image
 	LinstorKernelModVersion = "v9.0.21"
 )

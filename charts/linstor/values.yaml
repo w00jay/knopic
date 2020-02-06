@@ -1,0 +1,28 @@
+etcd:
+  persistence:
+    enabled: true
+  auth:
+    rbac:
+      enabled: false
+  statefulset:
+    replicaCount: 1
+  envVarsConfigMap: "etcd-env-vars"
+csi:
+  image:
+    repo: "quay.io/linstordatastore"
+    name: "linstor-csi"
+    version: "v0.7.3"
+repoCreds: drbdcreds     # <- Specify the kubernetes secret name here
+operator:
+  image:
+    repo: "drbd.io"
+    name: "linstor-operator"
+    version: "v0.1.0"
+  nodeSet:
+    spec:
+      disableDRBDKernelModuleInjection: false
+      lvmPoolName: "lvm-thick"
+      lvmPoolVgName: "drbdpool"        # <- Local VG name for Thick LVM Pool
+      lvmThinPoolName: "lvm-thin"
+      lvmThinPoolVgName: "drbdpool"    # <- Local VG name for Thin LVM Pool
+      lvmThinPoolLvName: "thinpool"    # <- Local LV name for Thin LVM Pool
