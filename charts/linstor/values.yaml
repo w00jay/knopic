@@ -12,7 +12,7 @@ csi:
     repo: "quay.io/linstordatastore"
     name: "linstor-csi"
     version: "v0.7.3"
-repoCreds: drbdcreds     # <- Specify the kubernetes secret name here
+repoCreds: drbdcred     # <- Specify the kubernetes secret name here
 operator:
   image:
     repo: "drbd.io"

@@ -688,7 +688,8 @@ func (r *ReconcileLinstorNodeSet) aggregateStoragePools(pns *linstorv1alpha1.Lin
 	}
 
 	for _, thinPool := range pns.Spec.StoragePools.LVMThinPools {
-        pools = append(pools, thinPool)
+		pools = append(pools, thinPool)
+	}
 
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,
