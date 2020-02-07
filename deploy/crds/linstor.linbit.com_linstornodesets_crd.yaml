@@ -73,9 +73,14 @@ spec:
               - lvmPools
               - lvmThinPools
               type: object
+            drbdRepoCred:
+              description: DrbeRepoCred is the name of the kubernetes secret that
+                holds the drbd.io credential
+              type: string
           required:
           - disableDRBDKernelModuleInjection
           - storagePools
+          - drbdRepoCred
           type: object
         status:
           description: LinstorNodeSetStatus defines the observed state of LinstorNodeSet

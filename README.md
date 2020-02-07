@@ -83,17 +83,20 @@ to the controller endpoint, which is a kubernetes service. See the operator-sdk
 guide on the Operator Framework for more information.
 
 Worker nodes will only run on kubelets labeled with `linstor.linbit.com/linstor-node=true`
+```
+kubectl label no my-worker-node linstor.linbit.com/linstor-node=true
+```
 
 ### Etcd
 
 An etcd cluster must be running and reachable to use this operator. By default,
-the controller will try to connect to `etcd-linstor` on port `2379`
+the controller will try to connect to `linstor-etcd` on port `2379`
 
 A simple in-memory etcd cluster can be set up using helm:
 ```
 kubectl create -f examples/etcd-env-vars.yaml
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install bitnami/etcd --name=etcd-linstor --set statefulset.replicaCount=3 -f examples/etcd-values.yaml
+helm install linstor-etcd bitnami/etcd --set statefulset.replicaCount=3 -f examples/etcd-values.yaml
 ```
 
 If you are using Helm 2 and encountering difficulties with the above steps, you may need to set RBAC
@@ -107,11 +110,9 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 ### Kubernetes Secret for drbd.io Repo Access
 
 Create a kubernetes secret to allow obtaining LINSTOR images from the
-drbd.io repo.  The secret name must match the operator deployment.  The 
-default name is `linstor`.  You can create a secret named `linstor` 
-like this;
+drbd.io repo.  Create a secret named `drbdcreds` like this;
 ```
-kubectl create secret docker-registry linstor --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
+kubectl create secret docker-registry drbdcreds --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
 ```
 
 ### Deploy Operator

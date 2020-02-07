@@ -148,6 +148,10 @@ func (r *ReconcileLinstorNodeSet) Reconcile(request reconcile.Request) (reconcil
 		return reconcile.Result{}, err
 	}
 
+	if pns.Spec.DrbdRepoCred == "" {
+		pns.Spec.DrbdRepoCred = kubeSpec.DrbdRepoCred
+	}
+
 	log := logrus.WithFields(logrus.Fields{
 		"resquestName":      request.Name,
 		"resquestNamespace": request.Namespace,
@@ -171,10 +175,6 @@ func (r *ReconcileLinstorNodeSet) Reconcile(request reconcile.Request) (reconcil
 	}
 	if pns.Spec.StoragePools.LVMThinPools == nil {
 		pns.Spec.StoragePools.LVMThinPools = make([]*linstorv1alpha1.StoragePoolLVMThin, 0)
-	}
-
-	if pns.Spec.DrbdRepoCred == "" {
-		pns.Spec.DrbdRepoCred = kubeSpec.DrbdRepoCred
 	}
 
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pns)
@@ -595,7 +595,7 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 					ImagePullSecrets: []corev1.LocalObjectReference{
 						{
 							// Name: pns.Name[0 : len(pns.Name)-3],
-							Name: kubeSpec.DrbdRepoCred,
+							Name: pns.Spec.DrbdRepoCred,
 						},
 					},
 				},
@@ -686,6 +686,9 @@ func (r *ReconcileLinstorNodeSet) aggregateStoragePools(pns *linstorv1alpha1.Lin
 	for _, thickPool := range pns.Spec.StoragePools.LVMPools {
 		pools = append(pools, thickPool)
 	}
+
+	for _, thinPool := range pns.Spec.StoragePools.LVMThinPools {
+        pools = append(pools, thinPool)
 
 	log := logrus.WithFields(logrus.Fields{
 		"name":      pns.Name,

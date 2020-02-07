@@ -34,8 +34,13 @@ spec:
           properties:
             etcdURL:
               type: string
+            drbdRepoCred:
+              description: DrbeRepoCred is the name of the kubernetes secret that
+                holds the drbd.io credential
+              type: string
           required:
           - etcdURL
+          - drbdRepoCred
           type: object
         status:
           description: LinstorControllerSetStatus defines the observed state of LinstorControllerSet
