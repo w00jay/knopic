@@ -173,6 +173,10 @@ func (r *ReconcileLinstorNodeSet) Reconcile(request reconcile.Request) (reconcil
 		pns.Spec.StoragePools.LVMThinPools = make([]*linstorv1alpha1.StoragePoolLVMThin, 0)
 	}
 
+	if pns.Spec.DrbdRepoCred == "" {
+		pns.Spec.DrbdRepoCred = kubeSpec.DrbdRepoCred
+	}
+
 	r.linstorClient, err = lc.NewHighLevelLinstorClientForObject(pns)
 	if err != nil {
 		return reconcile.Result{}, err
@@ -590,7 +594,8 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 					},
 					ImagePullSecrets: []corev1.LocalObjectReference{
 						{
-							Name: pns.Name[0 : len(pns.Name)-3],
+							// Name: pns.Name[0 : len(pns.Name)-3],
+							Name: kubeSpec.DrbdRepoCred,
 						},
 					},
 				},
@@ -680,10 +685,6 @@ func (r *ReconcileLinstorNodeSet) aggregateStoragePools(pns *linstorv1alpha1.Lin
 
 	for _, thickPool := range pns.Spec.StoragePools.LVMPools {
 		pools = append(pools, thickPool)
-	}
-
-	for _, thinPool := range pns.Spec.StoragePools.LVMThinPools {
-		pools = append(pools, thinPool)
 	}
 
 	log := logrus.WithFields(logrus.Fields{

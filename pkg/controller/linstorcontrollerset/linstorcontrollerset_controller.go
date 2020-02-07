@@ -151,6 +151,10 @@ func (r *ReconcileLinstorControllerSet) Reconcile(request reconcile.Request) (re
 		return reconcile.Result{}, err
 	}
 
+	if pcs.Spec.DrbdRepoCred == "" {
+		pcs.Spec.DrbdRepoCred = kubeSpec.DrbdRepoCred
+	}
+
 	log := logrus.WithFields(logrus.Fields{
 		"resquestName":      request.Name,
 		"resquestNamespace": request.Namespace,
@@ -544,7 +548,8 @@ func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.Sta
 					},
 					ImagePullSecrets: []corev1.LocalObjectReference{
 						{
-							Name: pcs.Name[0 : len(pcs.Name)-3],
+							// Name: pcs.Name[0 : len(pcs.Name)-3],
+							Name: pcs.Spec.DrbdRepoCred,
 						},
 					},
 				},

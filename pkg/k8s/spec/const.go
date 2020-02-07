@@ -73,4 +73,8 @@ const (
 	LinstorKernelModImage = "drbd.io/test-drbd"
 	// LinstorKernelModVersion is the release tag for the above image
 	LinstorKernelModVersion = "v9.0.21"
+
+	// DrbdRepoCred is the name of the kubernetes secret that holds the repo
+	// credentais for drbd.io
+	DrbdRepoCred = "drbdcred"
 )
