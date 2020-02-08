@@ -2,16 +2,15 @@
 apiVersion: linstor.linbit.com/v1alpha1
 kind: LinstorControllerSet
 metadata:
-  name: hello-linstor
+  name: linstor-cs
+  # etcdURL url for controller persistence.
+  etcdURL: "etcd://linstor-etcd.default.svc.cluster.local:2379"
 ---
 apiVersion: linstor.linbit.com/v1alpha1
 kind: LinstorNodeSet
 metadata:
-  name: hello-linstor
+  name: linstor-ns
 spec:
-  # etcdURL url for controller persistence.
-  etcdURL: "etcd-linstor:2379"
-
   # StoragePools for the NodeSet to manage.
   storagePools:
     lvmPools:
@@ -20,12 +19,12 @@ spec:
       # linstorpool must be an already existing lvm
       # volume group on the kubelet each Linstor
       # node is scheduled on.
-      volumeGroup: "linstorpool"
+      volumeGroup: "drbdpool"
     lvmThinPools:
     - name: "lvm-thin"
-      volumeGroup: "linstorpool"
+      volumeGroup: "drbdpool"
 
       # linstorthinpool must be an already existing
       # lvm thin volume backed linstorpool on the
       # kubelet each Linstor node is scheduled on.
-      thinVolume: "linstorthinpool"
+      thinVolume: "thinpool"
