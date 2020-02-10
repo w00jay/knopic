@@ -91,7 +91,7 @@ spec:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
       imagePullSecrets:
-        - name: {{ .Values.repoCreds }}
+        - name: {{ .Values.drbdRepoCred }}
       volumes:
         - name: socket-dir
           emptyDir: {}

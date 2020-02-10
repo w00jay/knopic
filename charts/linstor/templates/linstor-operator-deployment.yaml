@@ -33,4 +33,4 @@ spec:
             - name: OPERATOR_NAME
               value: "linstor-operator"
       imagePullSecrets:
-      - name: {{ .Values.repoCreds }}
+      - name: {{ .Values.drbdRepoCred }}

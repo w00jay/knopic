@@ -30,13 +30,13 @@ The operator can be deployed with Helm v3 chart in /charts.
   ```
 
 - Create a kubernetes secret to allow obtaining LINSTOR images from the 
-  drbd.io repo.  This example will create a secret named `drbdcred`:
+  drbd.io repo.  This example will create a secret named `drbdiocred`:
   ```
-  kubectl create secret docker-registry drbdcred --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
+  kubectl create secret docker-registry drbdiocred --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
   ```
   Then this secret name must be specified in the charts/linstor/values.yaml.  
   ```
-  repoCreds: drbdcred  # <- Specify the kubernetes secret name
+  repoCreds: drbdiocred  # <- Specify the kubernetes secret name
   ```
 
 - Configure the LVM VG and LV names in charts/linstor/values.yaml.
@@ -110,9 +110,9 @@ kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"templat
 ### Kubernetes Secret for drbd.io Repo Access
 
 Create a kubernetes secret to allow obtaining LINSTOR images from the
-drbd.io repo.  Create a secret named `drbdcred` like this;
+drbd.io repo.  Create a secret named `drbdiocred` like this;
 ```
-kubectl create secret docker-registry drbdcred --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
+kubectl create secret docker-registry drbdiocred --docker-server=drbd.io --docker-username=<YOUR LOGIN> --docker-email=<YOUR EMAIL> --docker-password=<YOUR PASSWORD>
 ```
 
 ### Deploy Operator

@@ -4,6 +4,9 @@ metadata:
   name: {{ template "linstor-operator.fullname" . }}-ns
 spec:
   disableDRBDKernelModuleInjection: {{ .Values.operator.nodeSet.spec.disableDRBDKernelModuleInjection }}
+  drbdRepoCred: {{ .Values.repoCreds }}
+  linstorSatImage: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
+  linstorSatVersion: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
   storagePools:
     lvmPools:
     - name: {{ .Values.operator.nodeSet.spec.lvmPoolName }}
@@ -12,4 +15,4 @@ spec:
     - name: {{ .Values.operator.nodeSet.spec.lvmThinPoolName }}
       volumeGroup: {{ .Values.operator.nodeSet.spec.lvmThinPoolVgName }}
       thinVolume: {{ .Values.operator.nodeSet.spec.lvmThinPoolLvName }}
-  drbdRepoCred: {{ .Values.repoCreds }}
+  

@@ -95,4 +95,4 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       imagePullSecrets:
-        - name: {{ .Values.repoCreds }}
+        - name: {{ .Values.drbdRepoCred }}
