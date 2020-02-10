@@ -7,6 +7,10 @@ metadata:
   etcdURL: "etcd://linstor-etcd.default.svc.cluster.local:2379"
   # K8s secret for repo credential
   drbdRepoCred: "drbdiocred"
+
+  # LINSTOR Controller source and tag/version
+  linstorControllerImage: "drbd.io/linstor-controller"
+  linstorControllerVersion: "v1.4.2.1"
 ---
 apiVersion: linstor.linbit.com/v1alpha1
 kind: LinstorNodeSet
@@ -21,6 +25,10 @@ spec:
   # LINSTOR Satellite image source and tag/version
   linstorSatImage: "drbd.io/linstor-satellite"
   linstorSatVersion: "v1.4.2"
+
+  # DRBD kernel injection image source and tag/version
+  linstorKernelModImage: "drbd.io/drbd9"
+  linstorKernelModVersion: "bionic"
 
   # StoragePools for the NodeSet to manage.
   storagePools:
