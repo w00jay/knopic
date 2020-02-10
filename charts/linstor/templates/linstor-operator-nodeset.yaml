@@ -6,7 +6,7 @@ spec:
   disableDRBDKernelModuleInjection: {{ .Values.operator.nodeSet.spec.disableDRBDKernelModuleInjection }}
   drbdRepoCred: {{ .Values.repoCreds }}
   linstorSatImage: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
-  linstorSatVersion: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
+  linstorSatVersion: {{ .Values.operator.nodeSet.spec.linstorSatVersion }}
   storagePools:
     lvmPools:
     - name: {{ .Values.operator.nodeSet.spec.lvmPoolName }}
