@@ -74,9 +74,9 @@ const (
 	LinstorSatelliteVersion = "v1.4.2"
 
 	// LinstorKernelModImage is the worker (aka satellite) image for each node
-	LinstorKernelModImage = "drbd.io/test-drbd"
+	LinstorKernelModImage = "drbd.io/drbd9"
 	// LinstorKernelModVersion is the release tag for the above image
-	LinstorKernelModVersion = "v9.0.21"
+	LinstorKernelModVersion = "bionic"
 
 	// DrbdRepoCred is the name of the kubernetes secret that holds the repo
 	// credentais for drbd.io
