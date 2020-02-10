@@ -64,10 +64,15 @@ const LinstorNSPriorityClassName = "linstor-ns-priority-class"
 const (
 	// LinstorServerImage is the repo/tag for linstor-server. The controller
 	// and node use the same image with different commands.
-	LinstorServerImage = "drbd.io/test-linstor-server"
+	LinstorServerImage = "drbd.io/linstor-controller"
 	// LinstorVersion must must match exactly in the ControllerSet and the NodeSet
 	// since the linstor controller and satellite versions must also match exactly.
-	LinstorVersion = "v1.2.1"
+	LinstorVersion = "v1.4.2.1"
+
+	// LinstorSatelliteImage is the repo/tag for LINSTOR Satellite contaier.
+	LinstorSatelliteImage = "drbd.io/linstor-satellite"
+	// LinstorSatelliteVersion is the release tag for the above image
+	LinstorSatelliteVersion = "v1.4.2"
 
 	// LinstorKernelModImage is the worker (aka satellite) image for each node
 	LinstorKernelModImage = "drbd.io/test-drbd"

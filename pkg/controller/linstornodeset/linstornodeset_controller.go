@@ -480,6 +480,15 @@ func (r *ReconcileLinstorNodeSet) reconcileStoragePoolsOnNode(sat *linstorv1alph
 func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 	labels := pnsLabels(pns)
 	controllerName := pns.Name[0:len(pns.Name)-3] + "-cs"
+
+	if pns.Spec.LinstorSatImage == "" {
+		pns.Spec.LinstorSatImage = kubeSpec.LinstorSatelliteImage
+	}
+
+	if pns.Spec.LinstorSatVersion == "" {
+		pns.Spec.LinstorSatVersion = kubeSpec.LinstorSatelliteVersion
+	}
+
 	ds := &apps.DaemonSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      pns.Name + "-node",
@@ -517,8 +526,9 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 					PriorityClassName: kubeSpec.LinstorNSPriorityClassName,
 					Containers: []corev1.Container{
 						{
-							Name:            "linstor-satellite",
-							Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
+							Name: "linstor-satellite",
+							// Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
+							Image:           pns.Spec.LinstorSatImage + ":" + pns.Spec.LinstorSatVersion,
 							Args:            []string{"startSatellite"}, // Run linstor-satellite.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},

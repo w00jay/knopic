@@ -32,10 +32,19 @@ type LinstorNodeSetSpec struct {
 
 	// StoragePools is a list of StoragePools for LinstorNodeSet to manage.
 	StoragePools *StoragePools `json:"storagePools"`
+
 	//DisableDRBDKernelModuleInjection turns off automatic injection of the DRBD
 	// kernel module on the host system when set to true.
-	DisableDRBDKernelModuleInjection bool   `json:"disableDRBDKernelModuleInjection"`
-	DrbdRepoCred                     string `json:"drbdRepoCred"`
+	DisableDRBDKernelModuleInjection bool `json:"disableDRBDKernelModuleInjection"`
+
+	//DrbdRepoCred is the name of the k8s secret with the repo credential
+	DrbdRepoCred string `json:"drbdRepoCred"`
+
+	//LinstorSatImage is the LINSTOR Satellite image location
+	LinstorSatImage string `json:"linstorsatimage"`
+
+	//LinstorSatImage is the LINSTOR Satellite image location
+	LinstorSatVersion string `json:"linstorsatversion"`
 }
 
 // LinstorNodeSetStatus defines the observed state of LinstorNodeSet
