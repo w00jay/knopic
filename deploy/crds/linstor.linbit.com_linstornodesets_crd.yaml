@@ -78,11 +78,11 @@ spec:
                 holds the drbd.io credential
               type: string
             linstorSatImage:
-              description: LinstorSatImage is the image location for the LINSTOR 
+              description: LinstorSatImage is the image location for the LINSTOR
                 satellite container
               type: string
             linstorSatVersion:
-              description: LinstorSatVersion is the image tag/version for the LINSTOR 
+              description: LinstorSatVersion is the image tag/version for the LINSTOR
                 satellite container
               type: string
           required:
@@ -90,6 +90,7 @@ spec:
           - storagePools
           - drbdRepoCred
           - linstorSatImage
+          - linstorSatVersion
           type: object
         status:
           description: LinstorNodeSetStatus defines the observed state of LinstorNodeSet

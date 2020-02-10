@@ -526,10 +526,8 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 					PriorityClassName: kubeSpec.LinstorNSPriorityClassName,
 					Containers: []corev1.Container{
 						{
-							Name: "linstor-satellite",
-							// Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
+							Name:            "linstor-satellite",
 							Image:           pns.Spec.LinstorSatImage + ":" + pns.Spec.LinstorSatVersion,
-							Args:            []string{"startSatellite"}, // Run linstor-satellite.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 							Ports: []corev1.ContainerPort{
@@ -570,7 +568,7 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 							ReadinessProbe: &corev1.Probe{
 								Handler: corev1.Handler{
 									Exec: &corev1.ExecAction{
-										Command: []string{"linstor", "node", "list"},
+										Command: []string{"curl", "http://" + controllerName + ":" + "3370"},
 									},
 								},
 								TimeoutSeconds:      5,

@@ -490,7 +490,6 @@ func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.Sta
 						{
 							Name:            "linstor-controller",
 							Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
-							Args:            []string{"startController"}, // Run linstor-controller.
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 							Ports: []corev1.ContainerPort{
@@ -548,7 +547,6 @@ func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.Sta
 					},
 					ImagePullSecrets: []corev1.LocalObjectReference{
 						{
-							// Name: pcs.Name[0 : len(pcs.Name)-3],
 							Name: pcs.Spec.DrbdRepoCred,
 						},
 					},
@@ -583,7 +581,6 @@ func newServiceForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *corev1.Service
 func newConfigMapForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *corev1.ConfigMap {
 
 	if pcs.Spec.EtcdURL == "" {
-		// pcs.Spec.EtcdURL = "etcd://etcd-linstor:2379"
 		pcs.Spec.EtcdURL = "etcd://" + pcs.Name + "-etcd:2379"
 	}
 

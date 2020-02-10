@@ -41,10 +41,10 @@ type LinstorNodeSetSpec struct {
 	DrbdRepoCred string `json:"drbdRepoCred"`
 
 	//LinstorSatImage is the LINSTOR Satellite image location
-	LinstorSatImage string `json:"linstorsatimage"`
+	LinstorSatImage string `json:"linstorSatImage"`
 
 	//LinstorSatImage is the LINSTOR Satellite image location
-	LinstorSatVersion string `json:"linstorsatversion"`
+	LinstorSatVersion string `json:"linstorSatVersion"`
 }
 
 // LinstorNodeSetStatus defines the observed state of LinstorNodeSet
