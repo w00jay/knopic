@@ -33,14 +33,25 @@ spec:
           description: LinstorControllerSetSpec defines the desired state of LinstorControllerSet
           properties:
             etcdURL:
+              description: EtcdURL is the URL of the ETCD endpoint for LINSTOR Controller
               type: string
             drbdRepoCred:
               description: DrbeRepoCred is the name of the kubernetes secret that
                 holds the drbd.io credential
               type: string
+            linstorControllerImage:
+              description: LinstorControllerImage is the image location for the LINSTOR
+                controller/server container
+              type: string
+            linstorControllerVersion:
+              description: LinstorControllerVersion is the image tag/version for the LINSTOR
+                controller/server container
+              type: string
           required:
           - etcdURL
           - drbdRepoCred
+          - linstorControllerImage
+          - linstorControllerVersion
           type: object
         status:
           description: LinstorControllerSetStatus defines the observed state of LinstorControllerSet

@@ -469,6 +469,14 @@ func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.Sta
 
 	labels := pcsLabels(pcs)
 
+	if pcs.Spec.LinstorControllerImage == "" {
+		pcs.Spec.LinstorControllerImage = kubeSpec.LinstorControllerImage
+	}
+
+	if pcs.Spec.LinstorControllerVersion == "" {
+		pcs.Spec.LinstorControllerVersion = kubeSpec.LinstorControllerVersion
+	}
+
 	return &appsv1.StatefulSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      pcs.Name + "-controller",
@@ -489,7 +497,7 @@ func newStatefulSetForPCS(pcs *linstorv1alpha1.LinstorControllerSet) *appsv1.Sta
 					Containers: []corev1.Container{
 						{
 							Name:            "linstor-controller",
-							Image:           kubeSpec.LinstorServerImage + ":" + kubeSpec.LinstorVersion,
+							Image:           pcs.Spec.LinstorControllerImage + ":" + pcs.Spec.LinstorControllerVersion,
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 							Ports: []corev1.ContainerPort{

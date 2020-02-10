@@ -62,14 +62,13 @@ const LinstorCSPriorityClassName = "linstor-cs-priority-class"
 const LinstorNSPriorityClassName = "linstor-ns-priority-class"
 
 const (
-	// LinstorServerImage is the repo/tag for linstor-server. The controller
-	// and node use the same image with different commands.
-	LinstorServerImage = "drbd.io/linstor-controller"
-	// LinstorVersion must must match exactly in the ControllerSet and the NodeSet
-	// since the linstor controller and satellite versions must also match exactly.
-	LinstorVersion = "v1.4.2.1"
+	// LinstorControllerImage is the repo/tag for linstor-server
+	LinstorControllerImage = "drbd.io/linstor-controller"
+	// LinstorControllerVersion must match LinstorSatelliteVersion since the
+	// linstor controller and satellite versions must also match exactly
+	LinstorControllerVersion = "v1.4.2.1"
 
-	// LinstorSatelliteImage is the repo/tag for LINSTOR Satellite contaier.
+	// LinstorSatelliteImage is the repo/tag for LINSTOR Satellite container
 	LinstorSatelliteImage = "drbd.io/linstor-satellite"
 	// LinstorSatelliteVersion is the release tag for the above image
 	LinstorSatelliteVersion = "v1.4.2"

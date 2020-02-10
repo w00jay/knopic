@@ -40,11 +40,13 @@ type LinstorNodeSetSpec struct {
 	//DrbdRepoCred is the name of the k8s secret with the repo credential
 	DrbdRepoCred string `json:"drbdRepoCred"`
 
-	//LinstorSatImage is the LINSTOR Satellite image location
-	LinstorSatImage string `json:"linstorSatImage"`
-
-	//LinstorSatImage is the LINSTOR Satellite image location
+	//LinstorSatImage & Version  is the LINSTOR Satellite image location and version/tag
+	LinstorSatImage   string `json:"linstorSatImage"`
 	LinstorSatVersion string `json:"linstorSatVersion"`
+
+	//LinstorKernelModImage & Version  is the DRBD Kernel injection image location and version/tag
+	LinstorKernelModImage   string `json:"linstorKernelModImage"`
+	LinstorKernelModVersion string `json:"linstorKernelModVersion"`
 }
 
 // LinstorNodeSetStatus defines the observed state of LinstorNodeSet

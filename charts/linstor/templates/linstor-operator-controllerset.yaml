@@ -5,3 +5,5 @@ metadata:
 spec:
   etcdURL: etcd://{{ .Release.Name }}-etcd:2379  # TODO: Fix
   drbdRepoCred: {{ .Values.drbdRepoCred }}
+  linstorControllerImage: {{ .Values.operator.controllerSet.spec.linstorControllerImage }}
+  linstorControllerVersion: {{ .Values.operator.controllerSet.spec.linstorControllerVersion }}

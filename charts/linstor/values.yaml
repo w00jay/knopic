@@ -18,11 +18,17 @@ operator:
     repo: "drbd.io"
     name: "linstor-operator"
     version: "v0.1.0"
+  controllerSet:
+    spec:
+      linstorControllerImage: "drbd.io/linstor-controller"
+      linstorControllerVersion: "v1.4.2.1"
   nodeSet:
     spec:
       disableDRBDKernelModuleInjection: false
       linstorSatImage: "drbd.io/linstor-satellite"
       linstorSatVersion: "v1.4.2"
+      linstorKernelModImage: "drbd.io/drbd9"
+      linstorKernelModVersion: "bionic"
       lvmPoolName: "lvm-thick"
       lvmPoolVgName: "drbdpool"        # <- Local VG name for Thick LVM Pool
       lvmThinPoolName: "lvm-thin"

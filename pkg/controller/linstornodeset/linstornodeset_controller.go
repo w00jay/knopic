@@ -489,6 +489,14 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 		pns.Spec.LinstorSatVersion = kubeSpec.LinstorSatelliteVersion
 	}
 
+	if pns.Spec.LinstorKernelModImage == "" {
+		pns.Spec.LinstorKernelModImage = kubeSpec.LinstorKernelModImage
+	}
+
+	if pns.Spec.LinstorKernelModVersion == "" {
+		pns.Spec.LinstorKernelModVersion = kubeSpec.LinstorKernelModVersion
+	}
+
 	ds := &apps.DaemonSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      pns.Name + "-node",
@@ -615,7 +623,7 @@ func newDaemonSetforPNS(pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 		return ds
 	}
 
-	return daemonSetWithDRBDKernelModuleInjection(ds)
+	return daemonSetWithDRBDKernelModuleInjection(ds, pns)
 }
 
 func newServiceForPNS(pns *linstorv1alpha1.LinstorNodeSet) *corev1.Service {
@@ -644,11 +652,11 @@ func newServiceForPNS(pns *linstorv1alpha1.LinstorNodeSet) *corev1.Service {
 	}
 }
 
-func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet) *apps.DaemonSet {
+func daemonSetWithDRBDKernelModuleInjection(ds *apps.DaemonSet, pns *linstorv1alpha1.LinstorNodeSet) *apps.DaemonSet {
 	ds.Spec.Template.Spec.InitContainers = []corev1.Container{
 		{
 			Name:            "drbd-kernel-module-injector",
-			Image:           kubeSpec.LinstorKernelModImage + ":" + kubeSpec.LinstorKernelModVersion, // bionic
+			Image:           pns.Spec.LinstorKernelModImage + ":" + pns.Spec.LinstorKernelModVersion,
 			ImagePullPolicy: corev1.PullIfNotPresent,
 			SecurityContext: &corev1.SecurityContext{Privileged: &kubeSpec.Privileged},
 			VolumeMounts: []corev1.VolumeMount{

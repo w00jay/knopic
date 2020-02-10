@@ -7,6 +7,8 @@ spec:
   drbdRepoCred: {{ .Values.repoCreds }}
   linstorSatImage: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
   linstorSatVersion: {{ .Values.operator.nodeSet.spec.linstorSatVersion }}
+  linstorKernelModImage: {{ .Values.operator.nodeSet.spec.linstorKernelModImage }}
+  linstorKernelModVersion: {{ .Values.operator.nodeSet.spec.linstorKernelModVersion }}
   storagePools:
     lvmPools:
     - name: {{ .Values.operator.nodeSet.spec.lvmPoolName }}
