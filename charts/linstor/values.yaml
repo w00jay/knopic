@@ -9,7 +9,7 @@ etcd:
   envVarsConfigMap: "etcd-env-vars"
 csi:
   image:
-    repo: "quay.io/linstordatastore"
+    repo: "drbd.io"
     name: "linstor-csi"
     version: "v0.7.3"
 repoCreds: drbdiocred     # <- Specify the kubernetes secret name here
