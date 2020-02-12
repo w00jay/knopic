@@ -1,5 +1,4 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  #name: {{ template "linstor-operator.fullname" . }}-sa
   name: {{ template "linstor-operator.fullname" . }}-operator
