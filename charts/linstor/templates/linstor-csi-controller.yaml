@@ -85,7 +85,7 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: LINSTOR_IP
-              value: http://{{ .Release.Name }}-linstor-cs:3370
+              value: http://{{ .Release.Name }}-cs:3370
           imagePullPolicy: "Always"
           volumeMounts:
             - name: socket-dir
