@@ -3,7 +3,7 @@ kind: LinstorNodeSet
 metadata:
   name: {{ template "linstor-operator.fullname" . }}-ns
 spec:
-  disableDRBDKernelModuleInjection: {{ .Values.operator.nodeSet.spec.disableDRBDKernelModuleInjection }}
+  drbdKernelModuleInjectionMode: {{ .Values.operator.nodeSet.spec.drbdKernelModuleInjectionMode }}
   drbdRepoCred: {{ .Values.drbdRepoCred }}
   linstorSatImage: {{ .Values.operator.nodeSet.spec.linstorSatImage }}
   linstorSatVersion: {{ .Values.operator.nodeSet.spec.linstorSatVersion }}

@@ -18,8 +18,8 @@ kind: LinstorNodeSet
 metadata:
   name: linstor-ns
 spec:
-  disableDRBDKernelModuleInjection: false
-  
+  drbdKernelModuleInjectionMode: Compile
+
   # K8s secret for repo credential
   drbdRepoCred: "drbdiocred"
 

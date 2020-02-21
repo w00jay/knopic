@@ -24,7 +24,7 @@ operator:
       linstorControllerVersion: "v1.4.2.1"
   nodeSet:
     spec:
-      disableDRBDKernelModuleInjection: false
+      drbdKernelModuleInjectionMode: Compile
       linstorSatImage: "drbd.io/linstor-satellite"
       linstorSatVersion: "v1.4.2"
       linstorKernelModImage: "drbd.io/drbd9"
