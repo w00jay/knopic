@@ -39,8 +39,13 @@ spec:
       # volume group on the kubelet each Linstor
       # node is scheduled on.
       volumeGroup: "drbdpool"
+
     lvmThinPools:
     - name: "lvm-thin"
+
+      # linstorpool must be an already existing lvm
+      # volume group on the kubelet each Linstor
+      # node is scheduled on.
       volumeGroup: "drbdpool"
 
       # linstorthinpool must be an already existing

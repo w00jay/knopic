@@ -9,14 +9,20 @@ rules:
   - ""
   resources:
   - pods
-  - services
+  - services/finalizers
   - endpoints
   - persistentvolumeclaims
   - events
   - configmaps
   - secrets
   verbs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - apps
   resources:
@@ -25,7 +31,13 @@ rules:
   - replicasets
   - statefulsets
   verbs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - monitoring.coreos.com
   resources:
@@ -47,19 +59,28 @@ rules:
   - pods
   verbs:
   - get
-- apiGroups:
-  - apps
-  resources:
-  - replicasets
-  verbs:
-  - get
+# - apiGroups:
+#   - apps
+#   resources:
+#   - replicasets
+#   - deployments
+#   verbs:
+#   - get
 - apiGroups:
   - linstor.linbit.com
   resources:
   - '*'
+  - linstornodesets
   - linstorcontrollersets
   verbs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -293,18 +314,28 @@ spec:
     served: true
     storage: true
 ---
-apiVersion: scheduling.k8s.io/v1
+apiVersion: scheduling.k8s.io/v1 # v1beta1 for 1.13
 kind: PriorityClass
 metadata:
-  name: linstor-priority-class
+  name: "linstor-cs-priority-class"
+value: 1000010
+globalDefault: false
+description: "Priority class for linstor controller"
+---
+apiVersion: scheduling.k8s.io/v1 # v1beta1 for 1.13
+kind: PriorityClass
+metadata:
+  name: "linstor-ns-priority-class"
 value: 1000000
 globalDefault: false
-description: "Priority class for linstor components"
+description: "Priority class for linstor satellite(s)"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: linstor-operator
+  labels:
+    name: linstor-operator
 spec:
   replicas: 1
   selector:
@@ -333,4 +364,6 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "linstor-operator"
+      imagePullSecrets:
+      - name: drbdiocred
 ---

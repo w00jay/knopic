@@ -3,7 +3,7 @@ kind: LinstorControllerSet
 metadata:
   name: {{ template "linstor-operator.fullname" . }}-cs
 spec:
-  etcdURL: etcd://{{ .Release.Name }}-etcd:2379  # TODO: Fix
+  etcdURL: etcd://{{ .Release.Name }}-etcd:2379 
   drbdRepoCred: {{ .Values.drbdRepoCred }}
   linstorControllerImage: {{ .Values.operator.controllerSet.spec.linstorControllerImage }}
   linstorControllerVersion: {{ .Values.operator.controllerSet.spec.linstorControllerVersion }}

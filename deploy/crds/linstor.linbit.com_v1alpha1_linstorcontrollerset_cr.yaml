@@ -1,7 +1,0 @@
-apiVersion: linstor.linbit.com/v1alpha1
-kind: LinstorControllerSet
-metadata:
-  name: example-linstorcontrollerset
-spec:
-  # Add fields here
-  size: 3

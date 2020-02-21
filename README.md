@@ -117,14 +117,14 @@ kubectl create secret docker-registry drbdiocred --docker-server=drbd.io --docke
 
 ### Deploy Operator
 
-Inspect the basic deployment example (examples/operator-infra.yaml), it may be deployed by:
+Inspect the basic deployment example (examples/linstor-operator-part-1.yaml), it may be deployed by:
 ```
-kubectl create -f examples/operator-infra.yaml
+kubectl create -f examples/linstor-operator-part-1.yaml
 ```
-Lastly, edit the storage nodes' LVM VG and LV names in examples/hello-linstor.yaml.  Now you can finally deploy the LINSTOR cluster with:
+Lastly, edit the storage nodes' LVM VG and LV names in examples/linstor-operator-part-2.yaml.  Now you can finally deploy the LINSTOR cluster with:
 
 ```
-kubectl create -f examples/hello-linstor.yaml
+kubectl create -f examples/linstor-operator-part-2.yaml
 ```
 
 ## License
