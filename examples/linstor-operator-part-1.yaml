@@ -9,7 +9,7 @@ rules:
   - ""
   resources:
   - pods
-  - services/finalizers
+  - services
   - endpoints
   - persistentvolumeclaims
   - events
@@ -47,22 +47,19 @@ rules:
   - pods
   verbs:
   - get
-# - apiGroups:
-#   - apps
-#   resources:
-#   - replicasets
-#   - deployments
-#   verbs:
-#   - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
 - apiGroups:
   - linstor.linbit.com
   resources:
   - '*'
-  - linstornodesets
   - linstorcontrollersets
   verbs:
   - '*'
-
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -331,7 +328,7 @@ spec:
       serviceAccountName: linstor-operator
       containers:
         - name: linstor-operator
-          image: "drbd.io/linstor-operator:v0.1.2"
+          image: "drbd.io/linstor-operator:v0.1.2.1"
           command:
           - linstor-operator
           imagePullPolicy: Always
