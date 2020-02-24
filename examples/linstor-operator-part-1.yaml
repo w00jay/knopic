@@ -334,7 +334,7 @@ spec:
       serviceAccountName: linstor-operator
       containers:
         - name: linstor-operator
-          image: "drbd.io/linstor-operator:v0.1.2.1"
+          image: "drbd.io/linstor-operator:v0.1.3"
           command:
           - linstor-operator
           imagePullPolicy: Always
